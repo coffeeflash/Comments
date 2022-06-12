@@ -12,7 +12,7 @@ public class Comment {
     private String id;
     private Date date;
     private String source;
-    private User user;
+    private String user;
 
     private String comment;
 
@@ -40,11 +40,11 @@ public class Comment {
         this.source = source;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
