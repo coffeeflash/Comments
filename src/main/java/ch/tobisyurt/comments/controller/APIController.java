@@ -23,9 +23,6 @@ public class APIController {
     @Autowired
     private CommentsRepo commentsRepo;
 
-//    @Autowired
-//    private MemCacheService quizService;
-
     @Autowired
     private QuizService quizService;
 
@@ -33,6 +30,7 @@ public class APIController {
     private static final String API_MAPPING_GET_COMMENTS = "/comments";
     private static final String API_MAPPING_GET_QUIZ = "/quiz";
     private static final String API_MAPPING_POST_QUIZ_SOLUTION = "/solution";
+    private static final String API_MAPPING_POST_COMMENT = "/comment";
 
     @GetMapping(value = API_MAPPING_GET_QUIZ)
     public String getQuiz(){
@@ -43,29 +41,7 @@ public class APIController {
     public List<Comment> getComments(@RequestHeader(value =  HttpHeaders.REFERER) final String referer,
                                      @RequestParam String post) {
 
-
-
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_COMMENTS, referer, post);
-
-//
-//        Quiz quiz = new Quiz("teststring", 8);
-//
-//        if(quizService.get("lalala") != null){
-//            Quiz quizToGet = (Quiz) quizService.get("lalala");
-//            LOG.info("Found a quiz: " + quizToGet.getContent());
-//
-//        }
-//
-//        quizService.add("lalala", quiz, 20);
-
-     /*   User u = new User();
-        u.setEmail("tobi@tobisyurt.net");
-        u.setPassword("abc");
-        u.setUsername("Toubi Van Kenoubi");
-
-*/
-
-
 
         List<Comment> comments = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -77,14 +53,19 @@ public class APIController {
             comments.add(c);
         }
 
-
-
         return comments;
     }
 
     @PostMapping(value = API_MAPPING_POST_QUIZ_SOLUTION)
     public void verifyQuizSolution(@RequestParam String nonce){
         boolean nonceValid = quizService.verifyQuizSolution("lala", nonce);
+        LOG.info("nonceValid: {}", nonceValid);
+
+    }
+
+    @PostMapping(value = API_MAPPING_POST_COMMENT)
+    public void addComment(@RequestBody Comment comment){
+        boolean nonceValid = quizService.verifyQuizSolution("lala", comment.getQuizSolution());
         LOG.info("nonceValid: {}", nonceValid);
 
     }

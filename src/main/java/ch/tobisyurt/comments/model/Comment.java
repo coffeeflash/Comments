@@ -13,8 +13,9 @@ public class Comment {
     private Date date;
     private String source;
     private String user;
-
     private String comment;
+
+    private String quizSolution;
 
     public String getId() {
         return id;
@@ -54,5 +55,13 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getQuizSolution() {
+        return quizSolution;
+    }
+
+    public void setQuizSolution(String quizSolution) {
+        this.quizSolution = quizSolution;
     }
 }

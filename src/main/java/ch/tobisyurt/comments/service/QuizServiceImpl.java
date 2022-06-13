@@ -20,11 +20,11 @@ public class QuizServiceImpl implements QuizService{
 
     private static final Logger LOG = LoggerFactory.getLogger(QuizServiceImpl.class);
 
-    private String abc = "abcdefghijklmnopqrstuvwxyz";
-    private String characters = "0123456789" + abc + abc.toUpperCase() + "{}[]()+-/%&";
+    private final String abc = "abcdefghijklmnopqrstuvwxyz";
+    private final String characters = "0123456789" + abc + abc.toUpperCase() + "{}[]()+-/%&";
 
-    private MessageDigest md;
-    private SecureRandom rd;
+    private final MessageDigest md;
+    private final SecureRandom rd;
 
     public QuizServiceImpl() throws NoSuchAlgorithmException {
         this.md = MessageDigest.getInstance("SHA-256");
@@ -33,12 +33,8 @@ public class QuizServiceImpl implements QuizService{
 
     @Override
     public String createQuiz(String quizKey, int securityLevel, int validityInSeconds) {
-        String quizString = generateString(8);
-        byte [] array = quizString.getBytes(StandardCharsets.ISO_8859_1);
-
-        LOG.info("Quiz bytes content: {}", array);
+        String quizString = generateString(32);
         LOG.info("Quiz bytes quizString: {}", quizString);
-        LOG.info("Quiz bytes content in hex: {}",  toHexString(array));
         Quiz q = new Quiz(quizString, securityLevel);
         memCacheService.add(quizKey, q, validityInSeconds);
 
@@ -63,15 +59,7 @@ public class QuizServiceImpl implements QuizService{
         } else {
             Quiz quizToVerify = (Quiz) quizToVerifyObj;
             LOG.info("Verify Quiz with id: {} and suggested nonce: {}", quizId, nonceString);
-            byte [] nonce = nonceString.getBytes(StandardCharsets.ISO_8859_1);
-
-            byte [] toHash = new byte[nonce.length + 8];
-            for (int i = 0; i < nonce.length; i++) {
-                toHash[i] = nonce[i];
-            }
-            for (int i = nonce.length; i < toHash.length; i++) {
-                toHash[i] = quizToVerify.getContent().getBytes(StandardCharsets.ISO_8859_1)[i-nonce.length];
-            }
+            byte[] toHash = (nonceString + quizToVerify.getContent()).getBytes();
             LOG.info("TO_HASH (nonce + content): {}", toHexString(toHash));
 
             byte[] hashedQuiz = md.digest(toHash);
@@ -83,15 +71,8 @@ public class QuizServiceImpl implements QuizService{
 
     private boolean isHashValid(byte[] hash, int securityLevel){
         for (int i = 0; i < securityLevel; i++) {
-            char[] binArr = new char[8];
-
-            //if a bit is 1, emplace '1' at the respective position in the array, else 0
             for(int j = 0 ; j < 8 ; j++){
-                if((hash[i] & (1 << j)) == 0){
-                    binArr[7 - j] = '0';
-//                    System.out.println(new String(binArr));
-                }else{
-                    binArr[7 - j] = '1';
+                if((hash[i] & (1 << j)) != 0){
                     return false;
                 }
             }
