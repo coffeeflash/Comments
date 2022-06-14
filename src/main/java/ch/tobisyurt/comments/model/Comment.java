@@ -10,11 +10,14 @@ public class Comment {
 
     @Id
     private String id;
+    // auto-generated
     private Date date;
+    // concat referer and blog-post title
     private String source;
     private String user;
     private String comment;
 
+    private String quizId;
     private String quizSolution;
 
     public String getId() {
@@ -55,6 +58,14 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(String quizId) {
+        this.quizId = quizId;
     }
 
     public String getQuizSolution() {

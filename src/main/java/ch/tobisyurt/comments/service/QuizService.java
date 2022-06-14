@@ -1,8 +1,9 @@
 package ch.tobisyurt.comments.service;
 
-public interface QuizService {
+import ch.tobisyurt.comments.model.Quiz;
 
-    public String createQuiz(String quizId, int securityLevel, int validityInSeconds);
-    public boolean verifyQuizSolution(String quizId, String nonce);
-    public String toHexString(byte[] hash);
+public interface QuizService {
+    Quiz createQuiz(int securityLevel, int validityInSeconds);
+    boolean verifyQuizSolution(String quizId, String nonce);
+    String toHexString(byte[] hash);
 }

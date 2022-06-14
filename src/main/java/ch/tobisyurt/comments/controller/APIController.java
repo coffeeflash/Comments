@@ -1,18 +1,18 @@
 package ch.tobisyurt.comments.controller;
 
 import ch.tobisyurt.comments.model.Comment;
-import ch.tobisyurt.comments.repository.CommentsRepo;
-import ch.tobisyurt.comments.service.MemCacheService;
+import ch.tobisyurt.comments.model.Quiz;
+import ch.tobisyurt.comments.service.CommentsService;
 import ch.tobisyurt.comments.service.QuizService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -21,10 +21,10 @@ import java.util.List;
 public class APIController {
 
     @Autowired
-    private CommentsRepo commentsRepo;
+    private QuizService quizService;
 
     @Autowired
-    private QuizService quizService;
+    private CommentsService commentsService;
 
     private static final Logger LOG = LoggerFactory.getLogger(APIController.class);
     private static final String API_MAPPING_GET_COMMENTS = "/comments";
@@ -33,42 +33,42 @@ public class APIController {
     private static final String API_MAPPING_POST_COMMENT = "/comment";
 
     @GetMapping(value = API_MAPPING_GET_QUIZ)
-    public String getQuiz(){
-        return quizService.createQuiz("lala", 2, 60);
+    public Quiz getQuiz(){
+        return quizService.createQuiz( 2, 60);
     }
 
     @GetMapping(value = API_MAPPING_GET_COMMENTS)
     public List<Comment> getComments(@RequestHeader(value =  HttpHeaders.REFERER) final String referer,
-                                     @RequestParam String post) {
+                                     @RequestParam String source) {
 
-        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_COMMENTS, referer, post);
-
-        List<Comment> comments = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Comment c = new Comment();
-            c.setDate(new Date());
-            c.setSource(post);
-           /* c.setUser(u);*/
-            c.setComment("this is comment nr. " + i);
-            comments.add(c);
-        }
-
-        return comments;
+        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_COMMENTS, referer, source);
+        return commentsService.getComments(source, referer);
     }
 
     @PostMapping(value = API_MAPPING_POST_QUIZ_SOLUTION)
-    public void verifyQuizSolution(@RequestParam String nonce){
-        boolean nonceValid = quizService.verifyQuizSolution("lala", nonce);
+    public void verifyQuizSolution(@RequestParam String nonce, @RequestParam String quizContent){
+        boolean nonceValid = quizService.verifyQuizSolution(quizContent, nonce);
         LOG.info("nonceValid: {}", nonceValid);
-
     }
 
     @PostMapping(value = API_MAPPING_POST_COMMENT)
-    public void addComment(@RequestBody Comment comment){
-        boolean nonceValid = quizService.verifyQuizSolution("lala", comment.getQuizSolution());
-        LOG.info("nonceValid: {}", nonceValid);
+    public void addComment(@RequestHeader(value =  HttpHeaders.REFERER) final String referer, @RequestBody Comment comment){
+        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, comment.getSource());
+        boolean nonceValid = quizService.verifyQuizSolution(comment.getQuizId(), comment.getQuizSolution());
 
+        if(!nonceValid){
+            LOG.info("Nonce is invalid rejected this request!");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+        commentsService.addComment(comment, referer);
     }
 
+    // to ensure nothing gets out for security reasons
+    // TODO introduce a more useful exception handling
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity handleBlogAlreadyExistsException(Exception e) {
+        LOG.error(e.getMessage());
+        return new ResponseEntity("Upsiiii", HttpStatus.CONFLICT);
+    }
 
 }

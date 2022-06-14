@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -21,7 +19,9 @@ public class QuizServiceImpl implements QuizService{
     private static final Logger LOG = LoggerFactory.getLogger(QuizServiceImpl.class);
 
     private final String abc = "abcdefghijklmnopqrstuvwxyz";
-    private final String characters = "0123456789" + abc + abc.toUpperCase() + "{}[]()+-/%&";
+    // TODO a lot of invalid chars for request parameters, change again, if data moved to body!
+//    private final String characters = "0123456789" + abc + abc.toUpperCase() + "{}[]()+-";
+    private final String characters = "0123456789" + abc + abc.toUpperCase() + "";
 
     private final MessageDigest md;
     private final SecureRandom rd;
@@ -32,13 +32,12 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public String createQuiz(String quizKey, int securityLevel, int validityInSeconds) {
+    public Quiz createQuiz(int securityLevel, int validityInSeconds) {
         String quizString = generateString(32);
         LOG.info("Quiz bytes quizString: {}", quizString);
         Quiz q = new Quiz(quizString, securityLevel);
-        memCacheService.add(quizKey, q, validityInSeconds);
-
-        return quizString;
+        memCacheService.add(q.getContent(), q, validityInSeconds);
+        return q;
     }
 
     private String generateString(int length) {

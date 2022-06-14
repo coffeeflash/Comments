@@ -14,6 +14,7 @@ public class MemCacheServiceImpl implements MemCacheService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MemCacheServiceImpl.class);
 
+    // TODO move to constructor and make it available over properties...
     private static final int CLEAN_UP_PERIOD_IN_SEC = 10;
     private static final int MILLI_TO_SEC_FACT = 1000;
     private final ConcurrentHashMap<String, SoftReference<MemCacheObject>> cache = new ConcurrentHashMap<>();
@@ -69,5 +70,10 @@ public class MemCacheServiceImpl implements MemCacheService {
     public long size() {
         return cache.entrySet().stream().filter(entry -> Optional.ofNullable(entry.getValue()).map(SoftReference::get)
                 .map(cacheObject -> !cacheObject.isExpired()).orElse(false)).count();
+    }
+
+    @Override
+    public long realSize() {
+        return cache.size();
     }
 }
