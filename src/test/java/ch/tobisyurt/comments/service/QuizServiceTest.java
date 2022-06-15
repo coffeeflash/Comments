@@ -7,6 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,27 +29,30 @@ public class QuizServiceTest {
 
     @Test
     void createQuiz(){
-        Quiz q = quizService.createQuiz(1,20);
+        Quiz q = quizService.createQuiz(1, 3, 20);
         assertNotNull(q);
-        assertNotNull(memCacheService.get(q.getContent()));
+        assertNotNull(memCacheService.get(q.getContents().get(0)));
         assertNull(memCacheService.get("none existing key..."));
     }
 
     @Test
     void createQuizAndVerify(){
         int securityLevel = 2;
-        Quiz q = quizService.createQuiz(securityLevel, 3600);
-        int nonce = 0;
-        String toHash;
-        do{
-            nonce++;
-            toHash = nonce + q.getContent();
-        }while(notAllZeroes(md.digest(toHash.getBytes()), securityLevel));
+        Quiz q = quizService.createQuiz(securityLevel, 3, 3600);
 
-        System.out.println("FINAL HASH: " + quizService.toHexString(md.digest(toHash.getBytes())));
-        System.out.println("NONCE + CONTENT: " + quizService.toHexString(toHash.getBytes()));
+        List<String> nonceStrings = new ArrayList<>();
 
-        assertTrue(quizService.verifyQuizSolution(q.getContent(), Integer.toString(nonce)));
+        for (String quizContent : q.getContents()){
+            int nonce = 0;
+            String toHash;
+            do{
+                nonce++;
+                toHash = nonce + quizContent;
+            }while(notAllZeroes(md.digest(toHash.getBytes()), securityLevel));
+            nonceStrings.add(Integer.toString(nonce));
+        }
+
+        assertTrue(quizService.verifyQuizSolution(q.getContents().get(0), nonceStrings));
     }
 
     private boolean notAllZeroes(byte[] hash, int securityLevel){
@@ -68,7 +73,7 @@ public class QuizServiceTest {
         int valididyInSeconds = 1;
         int quizCount = 100;
         for (int i = 0; i < quizCount; i++) {
-            quizService.createQuiz(2,valididyInSeconds);
+            quizService.createQuiz(2,1 ,valididyInSeconds);
         }
 
         assertTrue(memCacheService.size() >= quizCount);

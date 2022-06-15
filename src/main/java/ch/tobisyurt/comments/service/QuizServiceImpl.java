@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class QuizServiceImpl implements QuizService{
@@ -32,11 +34,15 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public Quiz createQuiz(int securityLevel, int validityInSeconds) {
-        String quizString = generateString(32);
-        LOG.info("Quiz bytes quizString: {}", quizString);
-        Quiz q = new Quiz(quizString, securityLevel);
-        memCacheService.add(q.getContent(), q, validityInSeconds);
+    public Quiz createQuiz(int securityLevel, int quizCount, int validityInSeconds) {
+        List<String> quizStrings = new ArrayList<>();
+        for (int i = 0; i < quizCount; i++) {
+            quizStrings.add(generateString(32));
+        }
+        LOG.info("Quiz Strings: {}", quizStrings);
+        Quiz q = new Quiz(quizStrings, securityLevel);
+        // TODO ensure that there is at least 1 element in the list
+        memCacheService.add(q.getContents().get(0), q, validityInSeconds);
         return q;
     }
 
@@ -49,7 +55,8 @@ public class QuizServiceImpl implements QuizService{
     }
 
     @Override
-    public boolean verifyQuizSolution(String quizId, String nonceString) {
+    public boolean verifyQuizSolution(String quizId, List<String> nonceStrings) {
+        // TODO ensure that there is at least 1 element in the list (in controller maybe...)
         Object quizToVerifyObj = memCacheService.get(quizId);
 
         if(quizToVerifyObj == null){
@@ -57,14 +64,22 @@ public class QuizServiceImpl implements QuizService{
             return false;
         } else {
             Quiz quizToVerify = (Quiz) quizToVerifyObj;
-            LOG.info("Verify Quiz with id: {} and suggested nonce: {}", quizId, nonceString);
-            byte[] toHash = (nonceString + quizToVerify.getContent()).getBytes();
-            LOG.info("TO_HASH (nonce + content): {}", toHexString(toHash));
+            LOG.info("Verify Quiz with id: {} and suggested nonceStrings: {}", quizId, nonceStrings);
 
-            byte[] hashedQuiz = md.digest(toHash);
-            LOG.info("Hash looks like: " + toHexString(hashedQuiz));
+            List <String> quizContents = quizToVerify.getContents();
+            if(quizContents.size() != nonceStrings.size()){
+                LOG.info("Wrong number of nonceStrings");
+                return false;
+            }
+            for (int i = 0; i < quizContents.size(); i++) {
+                byte[] toHash = (nonceStrings.get(i) + quizToVerify.getContents().get(i)).getBytes();
+                LOG.info("TO_HASH nr. {} (nonce + content): {}", i, toHexString(toHash));
+                byte[] hashedQuiz = md.digest(toHash);
+                LOG.info("Hash nr. {} looks like: {}", i, toHexString(hashedQuiz));
+                if(!isHashValid(hashedQuiz, quizToVerify.getSecurityLevel())) return false;
+            }
 
-            return isHashValid(hashedQuiz, quizToVerify.getSecurityLevel());
+            return true;
         }
     }
 

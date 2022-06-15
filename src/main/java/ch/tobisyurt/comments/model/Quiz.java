@@ -1,12 +1,14 @@
 package ch.tobisyurt.comments.model;
 
+import java.util.List;
+
 public class Quiz {
 
-    private String content;
+    private List<String> contents;
     private Integer securityLevel;
 
-    public Quiz(String content, int securityLevel) {
-        this.content = content;
+    public Quiz(List<String> contents, int securityLevel) {
+        this.contents = contents;
         this.securityLevel = securityLevel;
     }
 
@@ -14,14 +16,14 @@ public class Quiz {
         return securityLevel;
     }
 
-    public String getContent() {
-        return content;
+    public List<String> getContents() {
+        return contents;
     }
 
     @Override
     public String toString() {
         return "Quiz{" +
-                "content='" + content + '\'' +
+                "contents='" + contents + '\'' +
                 ", securityLevel=" + securityLevel +
                 '}';
     }

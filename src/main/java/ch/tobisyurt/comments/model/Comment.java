@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
+import java.util.List;
 
 @Document
 public class Comment {
@@ -18,7 +19,7 @@ public class Comment {
     private String comment;
 
     private String quizId;
-    private String quizSolution;
+    private List<String> quizSolutions;
 
     public String getId() {
         return id;
@@ -68,11 +69,11 @@ public class Comment {
         this.quizId = quizId;
     }
 
-    public String getQuizSolution() {
-        return quizSolution;
+    public List<String> getQuizSolutions() {
+        return quizSolutions;
     }
 
-    public void setQuizSolution(String quizSolution) {
-        this.quizSolution = quizSolution;
+    public void setQuizSolutions(List<String> quizSolution) {
+        this.quizSolutions = quizSolution;
     }
 }

@@ -34,7 +34,7 @@ public class APIController {
 
     @GetMapping(value = API_MAPPING_GET_QUIZ)
     public Quiz getQuiz(){
-        return quizService.createQuiz( 2, 60);
+        return quizService.createQuiz( 2, 4, 60);
     }
 
     @GetMapping(value = API_MAPPING_GET_COMMENTS)
@@ -46,15 +46,15 @@ public class APIController {
     }
 
     @PostMapping(value = API_MAPPING_POST_QUIZ_SOLUTION)
-    public void verifyQuizSolution(@RequestParam String nonce, @RequestParam String quizContent){
-        boolean nonceValid = quizService.verifyQuizSolution(quizContent, nonce);
+    public void verifyQuizSolution(@RequestParam List<String> nonceStrings, @RequestParam String quizId){
+        boolean nonceValid = quizService.verifyQuizSolution(quizId, nonceStrings);
         LOG.info("nonceValid: {}", nonceValid);
     }
 
     @PostMapping(value = API_MAPPING_POST_COMMENT)
     public void addComment(@RequestHeader(value =  HttpHeaders.REFERER) final String referer, @RequestBody Comment comment){
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, comment.getSource());
-        boolean nonceValid = quizService.verifyQuizSolution(comment.getQuizId(), comment.getQuizSolution());
+        boolean nonceValid = quizService.verifyQuizSolution(comment.getQuizId(), comment.getQuizSolutions());
 
         if(!nonceValid){
             LOG.info("Nonce is invalid rejected this request!");
@@ -68,7 +68,7 @@ public class APIController {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity handleBlogAlreadyExistsException(Exception e) {
         LOG.error(e.getMessage());
-        return new ResponseEntity("Upsiiii", HttpStatus.CONFLICT);
+        return new ResponseEntity("Upsiiii, das geit so niit!", HttpStatus.CONFLICT);
     }
 
 }
