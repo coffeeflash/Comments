@@ -44,7 +44,7 @@ public class APIController {
     public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
 
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
-        return quizService.createQuiz( 2, 1, 60);
+        return quizService.createQuiz( 2, 3, 120);
 
     }
 
@@ -77,7 +77,7 @@ public class APIController {
         LOG.info("Client IP Address is: {} remoteUser: {}", request.getRemoteAddr(), clientIpAddress);
         if(referer==null) throw new RuntimeException("no referer in the headers...");
 
-        int maxCommentingPeriod = 360;
+        int maxCommentingPeriod = 900;
 
         if(memCacheService.get(clientIpAddress) != null) {
             return "You can only post a comment every " + maxCommentingPeriod / 60 + " minutes.";
