@@ -39,4 +39,4 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       SPRING_DATA_MONGODB_HOST: mongo
-      SPRING_DATA_MONGODB_DATABASE: doclogica-cache
+      SPRING_DATA_MONGODB_DATABASE: comments
