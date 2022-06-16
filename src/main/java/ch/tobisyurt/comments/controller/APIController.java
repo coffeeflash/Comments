@@ -3,6 +3,7 @@ package ch.tobisyurt.comments.controller;
 import ch.tobisyurt.comments.model.Comment;
 import ch.tobisyurt.comments.model.Quiz;
 import ch.tobisyurt.comments.service.CommentsService;
+import ch.tobisyurt.comments.service.MemCacheService;
 import ch.tobisyurt.comments.service.QuizService;
 import ch.tobisyurt.comments.service.SecUtil;
 import org.slf4j.Logger;
@@ -11,10 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.context.support.SecurityWebApplicationContextUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -28,43 +31,72 @@ public class APIController {
     @Autowired
     private CommentsService commentsService;
 
+    @Autowired
+    private MemCacheService memCacheService;
+
     private static final Logger LOG = LoggerFactory.getLogger(APIController.class);
     private static final String API_MAPPING_GET_COMMENTS = "/comments";
     private static final String API_MAPPING_GET_QUIZ = "/quiz";
     private static final String API_MAPPING_POST_QUIZ_SOLUTION = "/solution";
     private static final String API_MAPPING_POST_COMMENT = "/comment";
+
     @GetMapping(value = API_MAPPING_GET_QUIZ)
-    public Quiz getQuiz(){
-        return quizService.createQuiz( 2, 4, 60);
+    public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
+
+        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
+        return quizService.createQuiz( 2, 1, 60);
+
     }
 
     @GetMapping(value = API_MAPPING_GET_COMMENTS)
-    public List<Comment> getComments(@RequestHeader(value =  HttpHeaders.REFERER) final String referer,
+    public List<Comment> getComments(HttpServletRequest request,
                                      @RequestParam String source) {
 
+        String referer = request.getHeader(HttpHeaders.REFERER);
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_COMMENTS, referer, source);
+        if(referer==null) throw new RuntimeException("no referer in the headers...");
         return commentsService.getComments(source, referer);
+
     }
 
     @PostMapping(value = API_MAPPING_POST_QUIZ_SOLUTION)
     public void verifyQuizSolution(@RequestParam List<String> nonceStrings, @RequestParam String quizId){
+
         boolean nonceValid = quizService.verifyQuizSolution(quizId, nonceStrings);
         LOG.info("nonceValid: {}", nonceValid);
+
     }
 
     @PostMapping(value = API_MAPPING_POST_COMMENT)
-    public void addComment(@RequestHeader(value =  HttpHeaders.REFERER) final String referer, @RequestBody Comment comment){
+    public String addComment(HttpServletRequest request, @RequestBody Comment comment){
+
+        String referer = request.getHeader(HttpHeaders.REFERER);
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, comment.getSource());
-        boolean nonceValid = quizService.verifyQuizSolution(comment.getQuizId(), comment.getQuizSolutions());
+        // somehow request.getRemoteUser() does not convert to a proper String... no hashCode...
+        String clientIpAddress = "" + request.getRemoteUser();
+        LOG.info("Client IP Address is: {} remoteUser: {}", request.getRemoteAddr(), clientIpAddress);
+        if(referer==null) throw new RuntimeException("no referer in the headers...");
 
-      /*  comment.setComment(SecUtil.cleanIt(comment.getComment()));
-        comment.setUser(SecUtil.cleanIt(comment.getUser()));*/
+        int maxCommentingPeriod = 360;
 
-        if(!nonceValid /*|| !SecUtil.validate(comment.getComment()) || !SecUtil.validate(comment.getUser())*/){
-            LOG.info("Nonce invalid rejected this request!");
+        if(memCacheService.get(clientIpAddress) != null) {
+            return "You can only post a comment every " + maxCommentingPeriod / 60 + " minutes.";
+        }
+
+        if(!SecUtil.validate(comment.getComment())
+                || !SecUtil.validate(comment.getUser())
+                || !quizService.verifyQuizSolution(comment.getQuizId(), comment.getQuizSolutions())){
+
+            LOG.info("rejected this request! (Either a nonce is invalid or you tried to bypass the input validation)");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
+
+
+        memCacheService.add(clientIpAddress, "asd", maxCommentingPeriod);
+        comment.setComment(SecUtil.newLines(comment.getComment()));
         commentsService.addComment(comment, referer);
+
+        return "ok";
     }
 
     // to ensure nothing gets out for security reasons
@@ -72,7 +104,7 @@ public class APIController {
     @ExceptionHandler(value = Exception.class)
     public ResponseEntity handleException(Exception e) {
         LOG.error(e.getMessage());
-        return new ResponseEntity("Upsiiii, das geit so niit!", HttpStatus.CONFLICT);
+        return new ResponseEntity("Either you try something nasty or you just have to read the api-docs again...", HttpStatus.CONFLICT);
     }
 
 }
