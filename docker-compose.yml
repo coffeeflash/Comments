@@ -9,7 +9,7 @@ services:
     image: mongo
     restart: always
     ports:
-      - 27017:27017
+      - 27018:27017
     volumes:
       - mongo_data:/data/db
   #    environment:
@@ -20,7 +20,7 @@ services:
     image: mongo-express
     restart: always
     ports:
-      - 8081:8081
+      - 8082:8081
     depends_on:
       - mongo
   #    environment:
@@ -40,3 +40,4 @@ services:
     environment:
       SPRING_DATA_MONGODB_HOST: mongo
       SPRING_DATA_MONGODB_DATABASE: comments
+      SPRING_DATA_MONGODB_PORT: 27018
