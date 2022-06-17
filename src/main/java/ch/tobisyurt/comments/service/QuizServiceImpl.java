@@ -54,6 +54,15 @@ public class QuizServiceImpl implements QuizService{
         return sb.toString();
     }
 
+    /**
+     * A Quiz can only be solved or tried to solve once. It gets deleted afterwards.
+     * If one needs another try, a new quiz must be generated.
+     *
+     * @param quizId        identifies the quiz to which the solution belongs
+     * @param nonceStrings  nonce's generating a hash with the # leading zeroes indicated by the securityLevel
+     *
+     * @retorn true for a correct solution...
+      */
     @Override
     public boolean verifyQuizSolution(String quizId, List<String> nonceStrings) {
         // TODO ensure that there is at least 1 element in the list (in controller maybe...)
@@ -76,9 +85,13 @@ public class QuizServiceImpl implements QuizService{
                 LOG.info("TO_HASH nr. {} (nonce + content): {}", i, toHexString(toHash));
                 byte[] hashedQuiz = md.digest(toHash);
                 LOG.info("Hash nr. {} looks like: {}", i, toHexString(hashedQuiz));
-                if(!isHashValid(hashedQuiz, quizToVerify.getSecurityLevel())) return false;
+                if(!isHashValid(hashedQuiz, quizToVerify.getSecurityLevel())) {
+                    memCacheService.remove(quizId);
+                    return false;
+                }
             }
 
+            memCacheService.remove(quizId);
             return true;
         }
     }

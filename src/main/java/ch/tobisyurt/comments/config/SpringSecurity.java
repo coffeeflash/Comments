@@ -18,6 +18,8 @@ public class SpringSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        // Most things configured here do not apply to the main site: tobisyurt.net, because it is served
+        // by another webserver...
         http    .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

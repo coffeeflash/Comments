@@ -18,9 +18,6 @@ public class Comment {
     private String user;
     private String comment;
 
-    private String quizId;
-    private List<String> quizSolutions;
-
     public String getId() {
         return id;
     }
@@ -61,19 +58,4 @@ public class Comment {
         this.comment = comment;
     }
 
-    public String getQuizId() {
-        return quizId;
-    }
-
-    public void setQuizId(String quizId) {
-        this.quizId = quizId;
-    }
-
-    public List<String> getQuizSolutions() {
-        return quizSolutions;
-    }
-
-    public void setQuizSolutions(List<String> quizSolution) {
-        this.quizSolutions = quizSolution;
-    }
 }

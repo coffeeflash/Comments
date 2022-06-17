@@ -1,6 +1,7 @@
 package ch.tobisyurt.comments.controller;
 
 import ch.tobisyurt.comments.model.Comment;
+import ch.tobisyurt.comments.model.CommentReq;
 import ch.tobisyurt.comments.model.Quiz;
 import ch.tobisyurt.comments.service.CommentsService;
 import ch.tobisyurt.comments.service.MemCacheService;
@@ -16,8 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -44,7 +43,7 @@ public class APIController {
     public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
 
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
-        return quizService.createQuiz( 2, 3, 120);
+        return quizService.createQuiz( 2, 4, 120);
 
     }
 
@@ -68,33 +67,34 @@ public class APIController {
     }
 
     @PostMapping(value = API_MAPPING_POST_COMMENT)
-    public String addComment(HttpServletRequest request, @RequestBody Comment comment){
+    public String addComment(HttpServletRequest request, @RequestBody CommentReq commentReq){
 
         String referer = request.getHeader(HttpHeaders.REFERER);
-        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, comment.getSource());
+        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, commentReq.getSource());
         // somehow request.getRemoteUser() does not convert to a proper String... no hashCode...
         String clientIpAddress = "" + request.getRemoteUser();
         LOG.info("Client IP Address is: {} remoteUser: {}", request.getRemoteAddr(), clientIpAddress);
         if(referer==null) throw new RuntimeException("no referer in the headers...");
 
-        int maxCommentingPeriod = 900;
+        //int maxCommentingPeriod = 900;
+        int maxCommentingPeriod = 10;
 
         if(memCacheService.get(clientIpAddress) != null) {
             return "You can only post a comment every " + maxCommentingPeriod / 60 + " minutes.";
         }
 
-        if(!SecUtil.validate(comment.getComment())
-                || !SecUtil.validate(comment.getUser())
-                || !quizService.verifyQuizSolution(comment.getQuizId(), comment.getQuizSolutions())){
+        if(!SecUtil.validate(commentReq.getComment())
+                || !SecUtil.validate(commentReq.getUser())
+                || !quizService.verifyQuizSolution(commentReq.getQuizId(), commentReq.getQuizSolutions())){
 
             LOG.info("rejected this request! (Either a nonce is invalid or you tried to bypass the input validation)");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
 
-        memCacheService.add(clientIpAddress, "asd", maxCommentingPeriod);
-        comment.setComment(SecUtil.newLines(comment.getComment()));
-        commentsService.addComment(comment, referer);
+        memCacheService.add(clientIpAddress, "waiting", maxCommentingPeriod);
+        commentReq.setComment(SecUtil.newLines(commentReq.getComment()));
+        commentsService.addComment(commentReq, referer);
 
         return "ok";
     }
