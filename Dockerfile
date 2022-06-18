@@ -19,7 +19,7 @@ FROM openjdk:17-jdk
 MAINTAINER Tobias Schneeberger
 
 # Add Spring Boot app.jar to Container
-COPY /target/comments-0.0.1-SNAPSHOT.jar app.jar
+COPY /target/comments*.jar app.jar
 
 ENV JAVA_OPTS=""
 
