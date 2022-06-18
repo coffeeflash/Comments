@@ -10,6 +10,8 @@ import ch.tobisyurt.comments.service.SecUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,11 +41,18 @@ public class APIController {
     private static final String API_MAPPING_POST_QUIZ_SOLUTION = "/solution";
     private static final String API_MAPPING_POST_COMMENT = "/comment";
 
+    @Autowired
+    Environment env;
+
     @GetMapping(value = API_MAPPING_GET_QUIZ)
     public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
 
+        int quizCount = Integer.parseInt(env.getProperty("quiz.count"));
+        int quizValidityInSeconds = Integer.parseInt(env.getProperty("quiz.validity.seconds"));
+        int quizComplexity = Integer.parseInt(env.getProperty("quiz.complexity"));
+
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
-        return quizService.createQuiz( 2, 4, 120);
+        return quizService.createQuiz( quizComplexity, quizCount, quizValidityInSeconds);
 
     }
 
@@ -73,14 +82,13 @@ public class APIController {
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, commentReq.getSource());
         // somehow request.getRemoteUser() does not convert to a proper String... no hashCode...
         String clientIpAddress = "" + request.getRemoteUser();
-        LOG.info("Client IP Address is: {} remoteUser: {}", request.getRemoteAddr(), clientIpAddress);
+        LOG.info("Client IP Address is: {}", request.getRemoteAddr());
         if(referer==null) throw new RuntimeException("no referer in the headers...");
 
-        //int maxCommentingPeriod = 900;
-        int maxCommentingPeriod = 10;
+        int ipBlockTime = Integer.parseInt(env.getProperty("ip.block.time"));
 
         if(memCacheService.get(clientIpAddress) != null) {
-            return "You can only post a comment every " + maxCommentingPeriod / 60 + " minutes.";
+            return "You can only post a comment every " + ipBlockTime / 60 + " minutes.";
         }
 
         if(!SecUtil.validate(commentReq.getComment())
@@ -92,7 +100,7 @@ public class APIController {
         }
 
 
-        memCacheService.add(clientIpAddress, "waiting", maxCommentingPeriod);
+        memCacheService.add(clientIpAddress, "waiting", ipBlockTime);
         commentReq.setComment(SecUtil.newLines(commentReq.getComment()));
         commentsService.addComment(commentReq, referer);
 
