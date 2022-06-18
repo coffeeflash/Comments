@@ -10,7 +10,6 @@ import ch.tobisyurt.comments.service.SecUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -47,12 +46,12 @@ public class APIController {
     @GetMapping(value = API_MAPPING_GET_QUIZ)
     public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
 
-        int quizCount = Integer.parseInt(env.getProperty("quiz.count"));
-        int quizValidityInSeconds = Integer.parseInt(env.getProperty("quiz.validity.seconds"));
-        int quizComplexity = Integer.parseInt(env.getProperty("quiz.complexity"));
+    //    int quizCount = Integer.parseInt(env.getProperty("quiz.count"));
+    //    int quizValidityInSeconds = Integer.parseInt(env.getProperty("quiz.validity.seconds"));
+    //    int quizComplexity = Integer.parseInt(env.getProperty("quiz.complexity"));
 
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
-        return quizService.createQuiz( quizComplexity, quizCount, quizValidityInSeconds);
+        return quizService.createQuiz( 2, 4, 120);
 
     }
 
@@ -85,7 +84,8 @@ public class APIController {
         LOG.info("Client IP Address is: {}", request.getRemoteAddr());
         if(referer==null) throw new RuntimeException("no referer in the headers...");
 
-        int ipBlockTime = Integer.parseInt(env.getProperty("ip.block.time"));
+        //int ipBlockTime = Integer.parseInt(env.getProperty("ip.block.time"));
+        int ipBlockTime = 900;
 
         if(memCacheService.get(clientIpAddress) != null) {
             return "You can only post a comment every " + ipBlockTime / 60 + " minutes.";
