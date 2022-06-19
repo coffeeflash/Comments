@@ -31,6 +31,28 @@ things for security reasons. I recommend to take the same regex for frontend val
 
 Further instructions for integration you will find in the more detailed Integration Chapter.
 
+## Configuration
+
+Following environment variables can be set to fit your needs the best as possible:
+
+```yaml
+environment:
+  IP_BLOCK_TIME: 900
+  QUIZ_COUNT: 5
+  QUIZ_VALIDITY_SECONDS: 120
+  QUIZ_COMPLEXITY: 2
+  SPRING_DATA_MONGODB_HOST: mongo
+  SPRING_DATA_MONGODB_DATABASE: comments
+  SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+  SPRING_DATA_MONGODB_USERNAME: root
+  SPRING_DATA_MONGODB_PASSWORD: pleaseChangeMe
+```
+
+The `QUIZ_COMPLEXITY` is the number of zero bytes needed to solve the quiz. I strongly recommend to leave it 2. 3 takes
+much longer in this single threaded client scenario. If you want to make it a bit harder, just increase the `QUIZ_COUNT`.
+If you increase `QUIZ_COMPLEXITY` or/and `QUIZ_COUNT`, you should also test if the time suffices on your target client
+devices...
+
 ## Integration
 
 ### Jekyll
@@ -51,3 +73,7 @@ Also add it the jquery somewhere in your html header (`_includes/head.html):
 The comments js can then be added in whichever post you want to have the comments activated. It depends a little on your
 Jekyll theme, how you would to that... In the end it should load at the very end of your post, so that the DOM is
 rendered already. Or you wrap the whole comments.js in `$(document).ready(function)`
+
+## Development
+
+TODO ...

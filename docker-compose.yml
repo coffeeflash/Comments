@@ -11,7 +11,7 @@ services:
       - mongo_data:/data/db
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: PhoneToughNFLPenalty
+      MONGO_INITDB_ROOT_PASSWORD: PleaseChangeMe
 
   mongo-express:
     image: mongo-express
@@ -22,8 +22,8 @@ services:
       - mongo
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: tobi
-      ME_CONFIG_BASICAUTH_PASSWORD: Matterhorn
-      ME_CONFIG_MONGODB_URL: mongodb://root:PhoneToughNFLPenalty@mongo:27017/
+      ME_CONFIG_BASICAUTH_PASSWORD: PleaseChangeMe
+      ME_CONFIG_MONGODB_URL: mongodb://root:PleaseChangeMe@mongo:27017/
 
   comments:
     image: registry.tobisyurt.net/comments
@@ -44,4 +44,4 @@ services:
       SPRING_DATA_MONGODB_DATABASE: comments
       SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
       SPRING_DATA_MONGODB_USERNAME: root
-      SPRING_DATA_MONGODB_PASSWORD: PhoneToughNFLPenalty
+      SPRING_DATA_MONGODB_PASSWORD: PleaseChangeMe
