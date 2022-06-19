@@ -8,8 +8,6 @@ services:
   mongo:
     image: mongo
     restart: always
-    ports:
-      - 27018:27017
     volumes:
       - mongo_data:/data/db
   #    environment:
@@ -38,6 +36,10 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
+      # SPRING_PROFILES_ACTIVE=prod --> not needed
+      IP_BLOCK_TIME: 60
+      QUIZ_COUNT: 3
+      QUIZ_VALIDITY_SECONDS: 120
+      QUIZ_COMPLEXITY: 2
       SPRING_DATA_MONGODB_HOST: mongo
       SPRING_DATA_MONGODB_DATABASE: comments
-      SPRING_DATA_MONGODB_PORT: 27018

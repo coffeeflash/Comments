@@ -10,6 +10,7 @@ import ch.tobisyurt.comments.service.SecUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -39,19 +40,20 @@ public class APIController {
     private static final String API_MAPPING_GET_QUIZ = "/quiz";
     private static final String API_MAPPING_POST_QUIZ_SOLUTION = "/solution";
     private static final String API_MAPPING_POST_COMMENT = "/comment";
-
-    @Autowired
-    Environment env;
+    @Value("${quiz.count}")
+    private int quizCount;
+    @Value("${quiz.validity.seconds}")
+    private int quizValidityInSeconds;
+    @Value("${quiz.complexity}")
+    private int quizComplexity;
+    @Value("${ip.block.time}")
+    private int ipBlockTime;
 
     @GetMapping(value = API_MAPPING_GET_QUIZ)
     public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
-
-    //    int quizCount = Integer.parseInt(env.getProperty("quiz.count"));
-    //    int quizValidityInSeconds = Integer.parseInt(env.getProperty("quiz.validity.seconds"));
-    //    int quizComplexity = Integer.parseInt(env.getProperty("quiz.complexity"));
-
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
-        return quizService.createQuiz( 2, 4, 120);
+        LOG.info("Quiz count: {}, quiz complexity: {}, quiz validity in seconds: {}", quizCount, quizComplexity, quizValidityInSeconds);
+        return quizService.createQuiz( quizComplexity, quizCount, quizValidityInSeconds);
 
     }
 
@@ -79,13 +81,11 @@ public class APIController {
 
         String referer = request.getHeader(HttpHeaders.REFERER);
         LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, commentReq.getSource());
+        LOG.info("Ip block time: {}", ipBlockTime);
         // somehow request.getRemoteUser() does not convert to a proper String... no hashCode...
         String clientIpAddress = "" + request.getRemoteUser();
         LOG.info("Client IP Address is: {}", request.getRemoteAddr());
         if(referer==null) throw new RuntimeException("no referer in the headers...");
-
-        //int ipBlockTime = Integer.parseInt(env.getProperty("ip.block.time"));
-        int ipBlockTime = 900;
 
         if(memCacheService.get(clientIpAddress) != null) {
             return "You can only post a comment every " + ipBlockTime / 60 + " minutes.";
