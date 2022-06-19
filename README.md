@@ -4,6 +4,8 @@
 
 Quick Video, how it could look.
 
+<img src="./integration/jekyll/comments-preview.GIF" width="100%" height="100%"/>
+
 ## Quickstart
 
 ### Backend
@@ -40,7 +42,7 @@ Add this to your post layout in `_layouts/post.html`
 ```
 
 Then put the necessary jquery-*.*.*.min.js and comments.js in `assets/js`.
-Also add it the jquery somewhere in your html header:
+Also add it the jquery somewhere in your html header (`_includes/head.html):
 
 ```html
 <script type="text/javascript" src="{{ site.baseurl }}/assets/js/jquery-3.4.1.min.js" ></script>
