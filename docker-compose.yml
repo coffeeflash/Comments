@@ -1,4 +1,3 @@
-# Use root/example as user/password credentials
 version: '3.1'
 
 volumes:
@@ -10,9 +9,9 @@ services:
     restart: always
     volumes:
       - mongo_data:/data/db
-  #    environment:
-  #      MONGO_INITDB_ROOT_USERNAME: root
-  #      MONGO_INITDB_ROOT_PASSWORD: example
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: PhoneToughNFLPenalty
 
   mongo-express:
     image: mongo-express
@@ -21,10 +20,10 @@ services:
       - 8082:8081
     depends_on:
       - mongo
-  #    environment:
-  #      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-  #      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-  #      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: tobi
+      ME_CONFIG_BASICAUTH_PASSWORD: Matterhorn
+      ME_CONFIG_MONGODB_URL: mongodb://root:PhoneToughNFLPenalty@mongo:27017/
 
   comments:
     image: registry.tobisyurt.net/comments
@@ -37,9 +36,12 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
       # SPRING_PROFILES_ACTIVE=prod --> not needed
-      IP_BLOCK_TIME: 60
-      QUIZ_COUNT: 3
+      IP_BLOCK_TIME: 900
+      QUIZ_COUNT: 5
       QUIZ_VALIDITY_SECONDS: 120
       QUIZ_COMPLEXITY: 2
       SPRING_DATA_MONGODB_HOST: mongo
       SPRING_DATA_MONGODB_DATABASE: comments
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      SPRING_DATA_MONGODB_USERNAME: root
+      SPRING_DATA_MONGODB_PASSWORD: PhoneToughNFLPenalty
