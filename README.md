@@ -1,9 +1,9 @@
 # Comments
 
-This app provides an API and an example integration to provide a simple static website with comments. I developed it
+This app will provide an API and an exemplary integration to provide a comments section to a simple static website. I developed it
 for two jekyll blogs, but it is easily integrated in any blog.
 
-The cool thing about this app is, that users do not need to register to any service. They can just post comments. For
+The cool thing about this app is, that users do not need to register to any services. They can just post comments. For
 security reasons I implemented some protection in form of hash quizes (similar to the proof of work concept with bitcoin)
 and simple ip blocking on certain condtions.
 
