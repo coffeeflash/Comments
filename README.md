@@ -1,5 +1,12 @@
 # Comments
 
+This app provides an API and an example integration to provide a simple static website with comments. I developed it
+for two jekyll blogs, but it is easily integrated in any blog.
+
+The cool thing about this app is, that users do not need to register to any service. They can just post comments. For
+security reasons I implemented some protection in form of hash quizes (similar to the proof of work concept with bitcoin)
+and simple ip blocking on certain condtions.
+
 ## Preview
 
 Quick Video, how it could look.
@@ -9,7 +16,7 @@ Quick Video, how it could look.
 ## Quickstart
 
 ### Backend
-For a quick installtion just start with the provided docker-compose file. Be sure to change the credentials. 
+For a quick installtion just start with the provided docker-compose file. Be sure to change the credentials.
 After successful start you will have following services:
 
 * The main comments app, runs on port 8071 (default value in docker-compose). The comments api is mapped on `/api`
@@ -26,7 +33,7 @@ I use it for 2 jekyll blogs, That's why I provided that javascript files as an e
 integration scripts. Don't hesitate to contribute...
 
 I implemented a very strict input validation in the backend. Users are not allowed to add code samples and similar
-things for security reasons. I recommend to take the same regex for frontend validation 
+things for security reasons. I recommend to take the same regex for frontend validation
 (see `/integration/jekyll/comments.js`).
 
 Further instructions for integration you will find in the more detailed Integration Chapter.
@@ -77,7 +84,7 @@ rendered already. Or you wrap the whole comments.js in `$(document).ready(functi
 ## Development
 
 In general it is a simple spring boot app. If you are familiar with spring or spring boot you should be fine. I did not
-document a lot yet, but [here](https://tobisyurt.net/comments-app) I summarized some things and explained the basic 
+document a lot yet, but [here](https://tobisyurt.net/comments-app) I summarized some things and explained the basic
 functionalities.
 
 I will expand this section, when a contributor needs it...
