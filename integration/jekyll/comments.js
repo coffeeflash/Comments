@@ -1,5 +1,5 @@
 // to differ dev / prod env
-const baseUrl = location.origin.includes("4000") ? 'http://localhost:8080' : location.origin
+const baseUrl = location.origin.includes("4000") ? 'http://localhost:8080/comments' : location.origin + '/comments'
 
 let loading = false
 let solvedQuizes = 0
@@ -12,8 +12,8 @@ function setUp(){
     url: baseUrl + '/api/comments?source=' + $('#comments-title').text(),
     type: 'GET',
     success: function(comments){
-      $('#comments-section').empty().append(
-        '<h2>Comments - Section</h2>'+
+      $('#comment-section').empty().append(
+        '<h2>Comment - Section</h2>'+
         '<div class="comments"></div>'+
         '<div id="addComment">'+
         '  <button type="button" onclick="addComment()"> Add a comment </button>'+
@@ -144,7 +144,7 @@ function sendComment(){
         contentType: "application/json",
         type: 'POST',
         data: JSON.stringify({
-                source: $('#comments-title').text(),
+                source: $('#comment-title').text(),
                 user: $('#name').val(),
                 comment: $('#text-comment').val(),
                 quizId: quiz.contents[0],
