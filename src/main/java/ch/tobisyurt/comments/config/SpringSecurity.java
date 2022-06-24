@@ -18,6 +18,11 @@ public class SpringSecurity {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+        String[] resources = new String[]{
+                "/api/**"
+        };
+
+
         // Most things configured here do not apply to the main site: tobisyurt.net, because it is served
         // by another webserver...
         http    .sessionManagement()
@@ -25,11 +30,14 @@ public class SpringSecurity {
                 .and()
                 .csrf()
                 .disable()
-                .headers()
-                .xssProtection()
+                .authorizeRequests()
+                .antMatchers(resources).permitAll().anyRequest().authenticated().and().httpBasic()
                 .and()
+                .headers()
+                .xssProtection();
+                /*.and()
                 .contentSecurityPolicy("script-src 'self'");
-
+*/
         return http.build();
     }
 
