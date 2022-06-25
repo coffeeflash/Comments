@@ -18,6 +18,8 @@ public class Comment {
     private String user;
     private String comment;
 
+    private String reply;
+
     public String getId() {
         return id;
     }
@@ -58,4 +60,11 @@ public class Comment {
         this.comment = comment;
     }
 
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
 }
