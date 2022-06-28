@@ -1,15 +1,5 @@
 const baseUrl = location.origin + '/comments/secapi/'
 
-function deleteComment(id, source, i){
-    $.post(baseUrl + 'delete?id=' + id, function(data){
-        $('#category' + i).empty()
-        addComments(source, i)
-    })
-
-}
-
-
-
 function addComments(source, i){
     let commentsList = $('#category' + i)
 
@@ -22,11 +12,7 @@ function addComments(source, i){
 
         data.forEach((comment, i) => {
             commentsList.append(
-              '<ul><li>'
-               + comment.comment
-               + '<button type="button" onclick="deleteComment(\'' +
-               comment.id + '\', \'' + source + '\', \'' + i + '\')" >delete</button>' +
-               '</li></ul>'
+              '<ul><li>' + comment.comment + '</li></ul>'
             )
         })
 

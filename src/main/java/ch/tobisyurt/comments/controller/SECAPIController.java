@@ -2,7 +2,6 @@ package ch.tobisyurt.comments.controller;
 
 import ch.tobisyurt.comments.model.Comment;
 import ch.tobisyurt.comments.model.CommentCategoryCount;
-import ch.tobisyurt.comments.repository.CommentsRepo;
 import ch.tobisyurt.comments.service.CommentsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,13 +19,9 @@ public class SECAPIController {
     @Autowired
     private CommentsService commentsService;
 
-    @Autowired
-    private CommentsRepo commentsRepo;
-
     private static final Logger LOG = LoggerFactory.getLogger(SECAPIController.class);
     private static final String APISEC_MAPPING_POST_REPLY = "/reply";
     private static final String APISEC_MAPPING_POST_DELETE = "/delete";
-    private static final String APISEC_MAPPING_POST_DELETE_CATEGORY = "/deleteCategory";
     private static final String APISEC_MAPPING_GET_COMMENTS = "/comments";
     private static final String APISEC_MAPPING_GET_COMMENT_CATEGORIES = "/commentCategories";
 
@@ -48,22 +43,6 @@ public class SECAPIController {
         LOG.info("{} got called.", APISEC_MAPPING_GET_COMMENT_CATEGORIES);
         return commentsService.getCommentCategoryCounts();
     }
-
-    @PostMapping(value = APISEC_MAPPING_POST_DELETE)
-    public void deleteComment(@RequestParam String id){
-        LOG.info("{} got called.", APISEC_MAPPING_POST_DELETE);
-        commentsRepo.deleteById(id);
-    }
-
-    @PostMapping(value = APISEC_MAPPING_POST_DELETE_CATEGORY)
-    public void deleteCommentsOfCategory(@RequestParam String category){
-        LOG.info("{} got called.", APISEC_MAPPING_POST_DELETE_CATEGORY);
-        List<Comment> toDelete = commentsRepo.findAllBySourceOrderByDateAsc(category);
-        for (Comment c : toDelete) {
-            commentsRepo.delete(c);
-        }
-    }
-
 
     // to ensure nothing gets out for security reasons
     // TODO introduce a more useful exception handling
