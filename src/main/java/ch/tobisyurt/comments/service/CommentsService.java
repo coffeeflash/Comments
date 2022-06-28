@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface CommentsService {
     void addComment(Comment comment, String referer);
+    void deleteComment(String id);
     List<Comment> getComments(String source, String referer);
     List<CommentCategoryCount> getCommentCategoryCounts();
 }

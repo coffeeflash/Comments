@@ -44,6 +44,12 @@ public class SECAPIController {
         return commentsService.getCommentCategoryCounts();
     }
 
+    @PostMapping(value = APISEC_MAPPING_POST_DELETE)
+    public void deleteComment(@RequestParam String id) {
+        LOG.info("{} got called wit id: {}", APISEC_MAPPING_POST_DELETE, id);
+        commentsService.deleteComment(id);
+    }
+
     // to ensure nothing gets out for security reasons
     // TODO introduce a more useful exception handling
     @ExceptionHandler(value = Exception.class)

@@ -35,6 +35,11 @@ public class CommentServiceImpl implements CommentsService{
     }
 
     @Override
+    public void deleteComment(String id) {
+        commentsRepo.deleteById(id);
+    }
+
+    @Override
     public List<Comment> getComments(String source, String referer) {
         return commentsRepo.findAllBySourceOrderByDateAsc(referer + source);
     }
