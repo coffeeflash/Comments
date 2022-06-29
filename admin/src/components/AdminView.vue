@@ -1,11 +1,11 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
     <h1>Admin - Comments</h1>
     <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
+      An overview of all the comments.<br>
+      Expand the categories to see, delete and reply to comments.
     </p>
-    <h2>Installed CLI Plugins</h2>
+    <LoadingAnimation :loading="initializing"></LoadingAnimation>
+    <h2>Comment Categories</h2>
     <ul>
       <li v-for="commentSource in commentSources">
         <a :href="makeUrl(commentSource.source)"> {{ commentSource.source }} </a>
@@ -16,11 +16,11 @@
         <button v-else type="button" @click="showComments(commentSource.source)" >
           v
         </button>
-
+        <LoadingAnimation :loading="loading" size="1"></LoadingAnimation>
         <ul v-if="isCollapsed(commentSource.source)">
           <li v-for="commentToEdit in commentsToEdit">
             {{commentToEdit.comment}}
-            <button type="button" @click="deleteComment(commentToEdit.id, commentSource.source)">delete</button>
+            <button type="button" @click="deleteComment(commentToEdit.id, commentSource)">delete</button>
           </li>
         </ul>
 
@@ -31,22 +31,29 @@
 <script>
 import axios from 'axios'
 import  { ref, onMounted } from 'vue'
-
+import LoadingAnimation from "@/components/LoadingAnimation";
 export default {
   name: 'AdminView',
+  components: {
+    LoadingAnimation
+  },
   setup(){
 
     const baseUrl = process.env.BASE_URL + 'secapi/'
     const commentSources = ref([])
     const commentsToShow = ref('')
     const commentsToEdit = ref([])
+    const loading = ref(false)
+    const initializing = ref(false)
 
     onMounted(() => prepare())
 
     function prepare(){
+      initializing.value = true
       axios.get(baseUrl + 'commentCategories').then(
         r => {
           commentSources.value = r.data
+          initializing.value = false
         }
       )
     }
@@ -62,18 +69,28 @@ export default {
     }
 
     function showComments(source){
+      loading.value = true
       axios.get(baseUrl + 'comments?source=' + source).then(
         r => {
+          loading.value = false
           commentsToShow.value = source
           commentsToEdit.value = r.data
         }
       )
     }
 
-    function deleteComment(id, source){
+    function deleteComment(id, commentSource){
+      loading.value = true
       axios.post(baseUrl + 'delete?id=' + id).then(
         () => {
-          showComments(source)
+          commentSources.value.forEach(s => {
+            if (s.source === commentSource.source) s.count--
+          })
+          if(commentSource.count == 0) {
+            loading.value = false
+            prepare()
+          }
+          else showComments(commentSource.source)
         }
       )
     }
@@ -82,6 +99,8 @@ export default {
       commentSources,
       commentsToShow,
       commentsToEdit,
+      loading,
+      initializing,
       makeUrl,
       showComments,
       isCollapsed,
