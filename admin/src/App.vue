@@ -1,9 +1,9 @@
 <template>
-  <AdminView/>
+  <admin-view/>
 </template>
 
 <script>
-import AdminView from './components/AdminView.vue'
+import AdminView from '@/components/AdminView.vue'
 
 export default {
   name: 'App',
@@ -14,11 +14,10 @@ export default {
 </script>
 
 <style lang="scss">
-
 // -------------- THEME SWITCHER -------------- //
 @mixin dark-appearance {
   filter: invert(1);
-  img {
+  img, svg{
     filter: invert(1);
 
     &.ioda { filter: invert(0); }
@@ -29,27 +28,43 @@ body[a="dark"] { @include dark-appearance; }
 
 
 @media (prefers-color-scheme: dark) {
-  body[a="auto"] { @include dark-appearance; }
+  body { @include dark-appearance; }
 }
 // -------------------------------------------- //
+
 
 // bg color is also needed in html in order to
 // block body's background propagation
 // see: https://stackoverflow.com/a/61265706
-html, body { background: white; }
-
-html { height: 100%; }
+html, body { background: white;}
+html{
+  height: 100%;
+  overflow-y: auto !important; // otherwise vue forces it for some reason...
+}
 
 body {
   color: black;
   font-family: monospace;
   font-size: 16px;
   line-height: 1.4;
-  margin: 10vh 0 0 10vw;
+  margin: 0;
+  //padding: 5vh 0 0 0;
+  //padding: 10vh 0 0 10vw;
   min-height: 100%;
   overflow-wrap: break-word;
+  //text-align: center;
+  display: grid;
+  grid: auto / 1fr minmax(250px, 720px) 1fr;
 }
 
+h1, div {
+  grid-column: 2 / 3;
+}
+body > div{
+  padding: 2%;
+  border-right: solid 1px lightgray;
+  border-left: solid 1px lightgray;
+}
 .post-meta { text-align: right; }
 
 h2, h3, h4, h5, h6 { margin-top: 3rem; }
@@ -110,6 +125,17 @@ img {
   max-width: 100%;
   display: block;
   margin: 0 auto;
+}
+
+button {
+  margin-left: 0.5rem;
+}
+
+.emphasize {
+  margin-top: 0.6rem;
+  padding: 0.5rem;
+  background-color: lightgray;
+  border-radius: 5px;
 }
 
 </style>

@@ -2,10 +2,13 @@ package ch.tobisyurt.comments.controller;
 
 import ch.tobisyurt.comments.model.Comment;
 import ch.tobisyurt.comments.model.CommentCategoryCount;
+import ch.tobisyurt.comments.model.ReplyReq;
 import ch.tobisyurt.comments.service.CommentsService;
+import ch.tobisyurt.comments.service.SecUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ public class SECAPIController {
     @Autowired
     private CommentsService commentsService;
 
+    @Value("${admin.name}")
+    private String admin;
+
     private static final Logger LOG = LoggerFactory.getLogger(SECAPIController.class);
     private static final String APISEC_MAPPING_POST_REPLY = "/reply";
     private static final String APISEC_MAPPING_POST_DELETE = "/delete";
@@ -26,10 +32,10 @@ public class SECAPIController {
     private static final String APISEC_MAPPING_GET_COMMENT_CATEGORIES = "/commentCategories";
 
 
-    @GetMapping(value = APISEC_MAPPING_POST_REPLY)
-    public void replyToComment(@RequestParam String source) {
+    @PostMapping(value = APISEC_MAPPING_POST_REPLY)
+    public void replyToComment(@RequestBody ReplyReq replyReq) {
         LOG.info("{} got called.", APISEC_MAPPING_POST_REPLY);
-
+        commentsService.replyToComment(replyReq.getId(), this.admin, SecUtil.newLines(replyReq.getText()));
     }
 
     @GetMapping(value = APISEC_MAPPING_GET_COMMENTS)

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentsService{
@@ -37,6 +38,17 @@ public class CommentServiceImpl implements CommentsService{
     @Override
     public void deleteComment(String id) {
         commentsRepo.deleteById(id);
+    }
+
+    @Override
+    public void replyToComment(String id, String admin, String replyText) {
+        Optional<Comment> toReplyOpt = commentsRepo.findById(id);
+        if(toReplyOpt.isPresent()){
+            Comment c = toReplyOpt.get();
+            c.setReply(replyText);
+            c.setAdmin(admin);
+            commentsRepo.save(c);
+        }
     }
 
     @Override

@@ -17,7 +17,7 @@ public class Comment {
     private String source;
     private String user;
     private String comment;
-
+    private String admin;
     private String reply;
 
     public String getId() {
@@ -58,6 +58,14 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public String getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 
     public String getReply() {
