@@ -117,7 +117,6 @@ blockquote {
   font-style: italic;
   border: thin solid black;
   padding: 1rem;
-
   p { margin: 0; }
 }
 

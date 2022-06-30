@@ -21,14 +21,10 @@ export default {
     const spinnerStates = ['/', '-', '\\', '|']
     let i = 0
 
-    // onMounted(() => {
-    //   if (props.loading) recursiveWait()
-    // })
     watch(props, () => recursiveWait())
 
     async function recursiveWait() {
       spinner.value = spinnerStates[i++%4]
-      console.log('loading' + i)
       await delay(200)
       if(props.loading) await recursiveWait()
       else i = 0

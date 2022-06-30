@@ -19,6 +19,7 @@ public class Comment {
     private String comment;
     private String admin;
     private String reply;
+    private Date replyDate;
 
     public String getId() {
         return id;
@@ -74,5 +75,13 @@ public class Comment {
 
     public void setReply(String reply) {
         this.reply = reply;
+    }
+
+    public Date getReplyDate() {
+        return replyDate;
+    }
+
+    public void setReplyDate(Date replyDate) {
+        this.replyDate = replyDate;
     }
 }

@@ -47,6 +47,7 @@ public class CommentServiceImpl implements CommentsService{
             Comment c = toReplyOpt.get();
             c.setReply(replyText);
             c.setAdmin(admin);
+            c.setReplyDate(new Date());
             commentsRepo.save(c);
         }
     }
