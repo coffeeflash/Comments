@@ -89,7 +89,7 @@ rendered already. Or you wrap the whole comments.js in `$(document).ready(functi
 ## Development
 
 In general it is a simple spring boot app. If you are familiar with spring or spring boot you should be fine. I did not
-document a lot yet, but [here](https://tobisyurt.net/comments-app) I summarized some things and explained the basic
+document a lot yet, but [here](https://tobisyurt.net/app-comments) I summarized some things and explained the basic
 functionalities.
 
 I will expand this section, when a contributor needs it...
