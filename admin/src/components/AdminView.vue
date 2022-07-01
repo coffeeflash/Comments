@@ -9,7 +9,7 @@
   <h2>Comment Categories</h2>
   <ul>
     <li v-for="commentSource in commentSources">
-      <a :href="makeUrl(commentSource.source)">{{ commentSource.source }}</a>
+      <a :href="commentSource.source">{{ commentSource.sourceTitle }}</a>
       <strong> #<u>{{ commentSource.count }}</u></strong>
       <button v-if="isCollapsed(commentSource.source)" type="button" @click="commentsToShow = ''" >^</button>
       <button v-else type="button" @click="showComments(commentSource.source)" >v</button>
@@ -73,12 +73,6 @@ export default {
       )
     }
 
-    function makeUrl(source){
-      source = source.replace(/: |, | /g, "-")
-      source = source.toLowerCase()
-      return source + ".html"
-    }
-
     function isCollapsed(source){
       return commentsToShow.value === source
     }
@@ -128,7 +122,6 @@ export default {
       commentToReply,
       loading,
       initializing,
-      makeUrl,
       showComments,
       isCollapsed,
       deleteComment,

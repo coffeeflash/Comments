@@ -6,9 +6,9 @@ import ch.tobisyurt.comments.model.CommentCategoryCount;
 import java.util.List;
 
 public interface CommentsService {
-    void addComment(Comment comment, String referer);
+    void addComment(Comment comment);
     void deleteComment(String id);
     void replyToComment(String  id, String admin, String replyText);
-    List<Comment> getComments(String source, String referer);
+    List<Comment> getComments(String source);
     List<CommentCategoryCount> getCommentCategoryCounts();
 }

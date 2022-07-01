@@ -6,6 +6,7 @@ volumes:
 services:
   mongo:
     image: mongo
+    container_name: comments-mongo
     restart: always
     volumes:
       - mongo_data:/data/db
@@ -15,6 +16,7 @@ services:
 
   mongo-express:
     image: mongo-express
+    container_name: comments-mongo-express
     restart: always
     ports:
       - 8082:8081
@@ -27,6 +29,7 @@ services:
 
   comments:
     image: registry.tobisyurt.net/comments
+    container_name: comments-webapp
     restart: always
     ports:
       - 8071:8080

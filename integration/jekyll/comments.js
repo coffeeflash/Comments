@@ -1,5 +1,5 @@
 // to differ dev / prod env
-const baseUrl = location.origin.includes("4000") ? 'http://localhost:8080/comments' : location.origin + '/comments'
+const baseUrl = (location.origin.includes("4000") ? 'http://localhost:8080' : location.origin) + '/comments'
 
 let loading = false
 let solvedQuizes = 0
@@ -9,7 +9,7 @@ setUp()
 
 function setUp(){
   $.ajax({
-    url: baseUrl + '/api/comments?source=' + $('#comments-title').text(),
+    url: baseUrl + '/api/comments?source=' + document.URL,
     type: 'GET',
     success: function(comments){
       $('#comment-section').empty().append(
@@ -23,11 +23,18 @@ function setUp(){
       $('.comments').empty()
       comments.forEach(comment => {
         $('.comments').append(
-          '<h3>' + comment.user +
-            '<span style="color:rgb(128,128,128);font-size:0.8rem;"> (' + new Date(comment.date).toLocaleString() + ')</span>'+
+          '<div class="emphasize"><h3 style="margin: 0;">' + comment.user +
+            '<span style="color:gray;font-size:0.8rem;"> (' + new Date(comment.date).toLocaleString() + ')</span>'+
           '</h3>'+
-          '<p>' + comment.comment + '</p>'
+          '<p style="margin:0;">' + comment.comment + '</p></div>'
         )
+        if ( comment.reply ){
+          $('.comments').append(
+            '<div class="emphasize admin"><h3 style="margin: 0;">' + comment.admin +
+              '<span style="color:rgb(128,128,128);font-size:0.8rem;"> (' + new Date(comment.replyDate).toLocaleString() + ')</span></h3>'+
+            '<p  style="margin:0;">' + comment.reply + '</p></div>')
+        }
+
       })
     },
     error: function(){ console.log("upsss.....");}
@@ -83,6 +90,8 @@ function addComment(){
   $('#addComment').css("opacity", 0)
   $('#addComment').empty().append(
     '<h1>Add your comment:</h1>'+
+      '<p>No subscription to any service needed! Instead your device has to solve '+
+      'some hash quizes to successfully submit a comment.</p>'+
       '<p style="color:rgb(128,128,128);" id="loading"></p>'+
     '<form onsubmit="sendComment()"'+
       '<label for="name">Name:</label><br>'+
@@ -144,7 +153,8 @@ function sendComment(){
         contentType: "application/json",
         type: 'POST',
         data: JSON.stringify({
-                source: $('#comment-title').text(),
+                sourceTitle: $('#comment-title').text(),
+                source: document.URL,
                 user: $('#name').val(),
                 comment: $('#text-comment').val(),
                 quizId: quiz.contents[0],

@@ -13,8 +13,9 @@ public class Comment {
     private String id;
     // auto-generated
     private Date date;
-    // concat referer and blog-post title
+    // referer
     private String source;
+    private String sourceTitle;
     private String user;
     private String comment;
     private String admin;
@@ -43,6 +44,14 @@ public class Comment {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public String getSourceTitle() {
+        return sourceTitle;
+    }
+
+    public void setSourceTitle(String sourceTitle) {
+        this.sourceTitle = sourceTitle;
     }
 
     public String getUser() {

@@ -49,22 +49,16 @@ public class APIController {
     private int ipBlockTime;
 
     @GetMapping(value = API_MAPPING_GET_QUIZ)
-    public Quiz getQuiz(@RequestHeader(value =  HttpHeaders.REFERER) final String referer){
-        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_QUIZ, referer);
+    public Quiz getQuiz(){
         LOG.info("Quiz count: {}, quiz complexity: {}, quiz validity in seconds: {}", quizCount, quizComplexity, quizValidityInSeconds);
         return quizService.createQuiz( quizComplexity, quizCount, quizValidityInSeconds);
 
     }
 
     @GetMapping(value = API_MAPPING_GET_COMMENTS)
-    public List<Comment> getComments(HttpServletRequest request,
-                                     @RequestParam String source) {
-
-        String referer = request.getHeader(HttpHeaders.REFERER);
-        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_GET_COMMENTS, referer, source);
-        if(referer==null) throw new RuntimeException("no referer in the headers...");
-        return commentsService.getComments(source, referer);
-
+    public List<Comment> getComments(@RequestParam String source) {
+        LOG.info("{} got called for post: {}", API_MAPPING_GET_COMMENTS, source);
+        return commentsService.getComments(source);
     }
 
     @PostMapping(value = API_MAPPING_POST_QUIZ_SOLUTION)
@@ -78,13 +72,11 @@ public class APIController {
     @PostMapping(value = API_MAPPING_POST_COMMENT)
     public String addComment(HttpServletRequest request, @RequestBody CommentReq commentReq){
 
-        String referer = request.getHeader(HttpHeaders.REFERER);
-        LOG.info("{} got called from referer: {} for post: {}", API_MAPPING_POST_COMMENT, referer, commentReq.getSource());
+        LOG.info("{} got called for post: {}", API_MAPPING_POST_COMMENT, commentReq.getSourceTitle());
         LOG.info("Ip block time: {}", ipBlockTime);
         // somehow request.getRemoteUser() does not convert to a proper String... no hashCode...
         String clientIpAddress = "" + request.getRemoteUser();
         LOG.info("Client IP Address is: {}", request.getRemoteAddr());
-        if(referer==null) throw new RuntimeException("no referer in the headers...");
 
         if(memCacheService.get(clientIpAddress) != null) {
             return "You can only post a comment every " + ipBlockTime / 60 + " minutes.";
@@ -101,7 +93,7 @@ public class APIController {
 
         memCacheService.add(clientIpAddress, "waiting", ipBlockTime);
         commentReq.setComment(SecUtil.newLines(commentReq.getComment()));
-        commentsService.addComment(commentReq, referer);
+        commentsService.addComment(commentReq);
 
         return "ok";
     }

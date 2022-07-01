@@ -27,9 +27,9 @@ public class CommentServiceImpl implements CommentsService{
     private static final Logger LOG = LoggerFactory.getLogger(CommentServiceImpl.class);
 
     @Override
-    public void addComment(Comment comment, String referer) {
+    public void addComment(Comment comment) {
         comment.setDate(new Date());
-        comment.setSource(referer + comment.getSource());
+//        comment.setSource(referer);
         comment = commentsRepo.insert(comment);
         LOG.info("Persisted comment from user: {} on source: {} with comment_id: {}",
                 comment.getUser(), comment.getSource(), comment.getId());
@@ -53,20 +53,21 @@ public class CommentServiceImpl implements CommentsService{
     }
 
     @Override
-    public List<Comment> getComments(String source, String referer) {
-        return commentsRepo.findAllBySourceOrderByDateAsc(referer + source);
+    public List<Comment> getComments(String source) {
+        return commentsRepo.findAllBySourceOrderByDateAsc(source);
     }
 
     @Override
     public List<CommentCategoryCount> getCommentCategoryCounts() {
 
         final String SOURCE = "source";
+        final String SOURCE_TITLE = "sourceTitle";
         final String COUNT = "count";
 
-        GroupOperation groupOperation = Aggregation.group(SOURCE).count().as(COUNT);
+        GroupOperation groupOperation = Aggregation.group(SOURCE, SOURCE_TITLE).count().as(COUNT);
         // projection operation
         ProjectionOperation projectionOperation =
-                Aggregation.project(COUNT).and(SOURCE).previousOperation();
+                Aggregation.project(COUNT, SOURCE, SOURCE_TITLE);
         // sorting in ascending
         SortOperation sortOperation =
                 Aggregation.sort(Sort.by(Sort.Direction.DESC, COUNT));

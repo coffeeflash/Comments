@@ -41,7 +41,7 @@ public class SECAPIController {
     @GetMapping(value = APISEC_MAPPING_GET_COMMENTS)
     public List<Comment> getComments(@RequestParam String source) {
         LOG.info("{} got called.", APISEC_MAPPING_GET_COMMENTS);
-        return commentsService.getComments(source, "");
+        return commentsService.getComments(source);
     }
 
     @GetMapping(value = APISEC_MAPPING_GET_COMMENT_CATEGORIES)
