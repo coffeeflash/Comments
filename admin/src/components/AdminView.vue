@@ -9,8 +9,8 @@
   <h2>Comment Categories</h2>
   <ul>
     <li v-for="commentSource in commentSources">
-      <a :href="makeUrl(commentSource.source)"> {{ commentSource.source }} </a>
-      has {{ commentSource.count }} comments
+      <a :href="makeUrl(commentSource.source)">{{ commentSource.source }}</a>
+      <strong> #<u>{{ commentSource.count }}</u></strong>
       <button v-if="isCollapsed(commentSource.source)" type="button" @click="commentsToShow = ''" >^</button>
       <button v-else type="button" @click="showComments(commentSource.source)" >v</button>
       <loading-animation :loading="loading" size="1"></loading-animation>
@@ -29,7 +29,7 @@
             :already-replied="commentToEdit.reply ? commentToEdit.reply.replaceAll('<br>', '\n'): ''"
             @addReply="addReply(commentSource.source, $event)"
             v-if="commentToReply === commentToEdit.id"/>
-          <div class="emphasize" v-if="commentToEdit.reply">
+          <div class="emphasize admin" v-if="commentToEdit.reply">
             <strong>Replied: </strong><em v-html="commentToEdit.reply"></em>
           </div>
         </li>
@@ -74,7 +74,7 @@ export default {
     }
 
     function makeUrl(source){
-      source = source.replaceAll(" ", "-")
+      source = source.replace(/: |, | /g, "-")
       source = source.toLowerCase()
       return source + ".html"
     }

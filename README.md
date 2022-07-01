@@ -7,6 +7,8 @@ The cool thing about this app is, that users do not need to register to any serv
 security reasons I implemented some protection in form of hash quizes (similar to the proof of work concept with bitcoin)
 and simple ip blocking on certain condtions.
 
+If you want to read more about the project in general, see [here](https://tobisyurt.net/part-1-comments-app-overview).
+
 ## Preview
 
 Quick Video, how it could look.
@@ -89,7 +91,7 @@ rendered already. Or you wrap the whole comments.js in `$(document).ready(functi
 ## Development
 
 In general it is a simple spring boot app. If you are familiar with spring or spring boot you should be fine. I did not
-document a lot yet, but [here](https://tobisyurt.net/app-comments) I summarized some things and explained the basic
+document a lot yet, but [here](https://tobisyurt.net/part-1-comments-app-overview) I summarized some things and explained the basic
 functionalities.
 
 I will expand this section, when a contributor needs it...

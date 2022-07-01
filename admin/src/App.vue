@@ -54,7 +54,7 @@ body {
   overflow-wrap: break-word;
   //text-align: center;
   display: grid;
-  grid: auto / 1fr minmax(250px, 720px) 1fr;
+  grid: auto / 1fr minmax(250px, 960px) 1fr;
 }
 
 h1, div {
@@ -78,9 +78,6 @@ li { margin: 0.4rem 0; }
 *:target { background: yellow; }
 
 .w {
-  // max-width: 640px;
-  max-width: 720px;
-  // max-width: 960px;
   margin: 0 auto;
   padding: 4rem 2rem;
 }
@@ -135,6 +132,12 @@ button {
   padding: 0.5rem;
   background-color: lightgray;
   border-radius: 5px;
+  color: black;
+}
+
+.admin {
+  color: #FF4500;
+  margin-left: 2rem;
 }
 
 </style>

@@ -69,11 +69,10 @@ public class CommentServiceImpl implements CommentsService{
                 Aggregation.project(COUNT).and(SOURCE).previousOperation();
         // sorting in ascending
         SortOperation sortOperation =
-                Aggregation.sort(Sort.by(Sort.Direction.ASC, COUNT));
+                Aggregation.sort(Sort.by(Sort.Direction.DESC, COUNT));
         // aggregating all 3 operations using newAggregation() function
         Aggregation aggregation =
-                //Aggregation.newAggregation(groupOperation, projectionOperation, sortOperation);
-                Aggregation.newAggregation(groupOperation, projectionOperation);
+                Aggregation.newAggregation(groupOperation, projectionOperation, sortOperation);
         // putting in a list
         AggregationResults<CommentCategoryCount> results = mongoTemplate.aggregate(aggregation,
                 mongoTemplate.getCollectionName(Comment.class), CommentCategoryCount.class);
