@@ -145,6 +145,20 @@
 										<include>static/</include>
 										<include>index.html</include>
 										<include>logo.svg</include>
+										<include>android-chrome-192x192.png</include>
+										<include>android-chrome-512x512.png</include>
+										<include>apple-touch-icon.png</include>
+										<include>browserconfig.xml</include>
+										<include>favicon.ico</include>
+										<include>favicon-16x16.png</include>
+										<include>favicon-32x32.png</include>
+										<include>mstile-70x70.png</include>
+										<include>mstile-144x144.png</include>
+										<include>mstile-150x150.png</include>
+										<include>mstile-310x150.png</include>
+										<include>mstile-310x310.png</include>
+										<include>safari-pinned-tab.svg</include>
+										<include>site.webmanifest</include>
 									</includes>
 								</resource>
 							</resources>
