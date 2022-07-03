@@ -15,7 +15,9 @@ public class SpringSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         String[] resources = new String[]{
-                "/api/**"
+                "/api/**",
+                "/","/static/**", "/apple-touch-icon.png", "/index.html", "/static/css/**",
+                "/static/js/**", "/favicon-32x32.png", "/favicon-16x16.png", "/site.webmanifest"
         };
 
 
