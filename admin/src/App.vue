@@ -135,9 +135,41 @@ button {
   color: black;
 }
 
+.user{
+  margin-right: 6%;
+}
+
 .admin {
   color: #FF4500;
-  margin-left: 2rem;
+  margin-left: 6%;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.8s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+/*
+  Enter and leave animations can use different
+  durations and timing functions.
+*/
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.7s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translatey(-20px);
+  opacity: 0;
 }
 
 </style>
