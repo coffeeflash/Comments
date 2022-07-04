@@ -29,7 +29,10 @@ public class SECAPIController {
     private static final String APISEC_MAPPING_POST_REPLY = "/reply";
     private static final String APISEC_MAPPING_POST_DELETE = "/delete";
     private static final String APISEC_MAPPING_GET_COMMENTS = "/comments";
+    private static final String APISEC_MAPPING_GET_COMMENTS_UNREAD = "/commentsUnread";
     private static final String APISEC_MAPPING_GET_COMMENT_CATEGORIES = "/commentCategories";
+    private static final String APISEC_MAPPING_POST_READ = "/read";
+    private static final String APISEC_MAPPING_POST_READ_ALL = "/readAll";
 
 
     @PostMapping(value = APISEC_MAPPING_POST_REPLY)
@@ -44,6 +47,12 @@ public class SECAPIController {
         return commentsService.getComments(source);
     }
 
+    @GetMapping(value = APISEC_MAPPING_GET_COMMENTS_UNREAD)
+    public List<Comment> getComments() {
+        LOG.info("{} got called.", APISEC_MAPPING_GET_COMMENTS_UNREAD);
+        return commentsService.getCommentsRead(false);
+    }
+
     @GetMapping(value = APISEC_MAPPING_GET_COMMENT_CATEGORIES)
     public List<CommentCategoryCount> getCommentCategoryCounts() {
         LOG.info("{} got called.", APISEC_MAPPING_GET_COMMENT_CATEGORIES);
@@ -54,6 +63,18 @@ public class SECAPIController {
     public void deleteComment(@RequestParam String id) {
         LOG.info("{} got called wit id: {}", APISEC_MAPPING_POST_DELETE, id);
         commentsService.deleteComment(id);
+    }
+
+    @PostMapping(value = APISEC_MAPPING_POST_READ)
+    public void readComment(@RequestParam String id) {
+        LOG.info("{} got called wit id: {}", APISEC_MAPPING_POST_READ, id);
+        commentsService.setRead(id);
+    }
+
+    @PostMapping(value = APISEC_MAPPING_POST_READ_ALL)
+    public void readAllComments() {
+        LOG.info("{} got called", APISEC_MAPPING_POST_READ_ALL);
+        commentsService.setAllRead();
     }
 
     // to ensure nothing gets out for security reasons

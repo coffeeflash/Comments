@@ -144,6 +144,11 @@ button {
   margin-left: 6%;
 }
 
+.unread {
+  color: #FF4500;
+  margin-left: 1rem;
+}
+
 .v-enter-active,
 .v-leave-active {
   transition: opacity 0.8s ease;
@@ -154,16 +159,12 @@ button {
   opacity: 0;
 }
 
-/*
-  Enter and leave animations can use different
-  durations and timing functions.
-*/
 .slide-fade-enter-active {
   transition: all 0.3s ease-out;
 }
 
 .slide-fade-leave-active {
-  transition: all 0.7s cubic-bezier(1, 0.5, 0.8, 1);
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
 }
 
 .slide-fade-enter-from,

@@ -10,5 +10,8 @@ public interface CommentsService {
     void deleteComment(String id);
     void replyToComment(String  id, String admin, String replyText);
     List<Comment> getComments(String source);
+    List<Comment> getCommentsRead(boolean read);
     List<CommentCategoryCount> getCommentCategoryCounts();
+    void setRead(String id);
+    void setAllRead();
 }

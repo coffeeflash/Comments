@@ -46,6 +46,7 @@ public class CommentServiceImpl implements CommentsService{
         if(toReplyOpt.isPresent()){
             Comment c = toReplyOpt.get();
             c.setReply(replyText);
+            c.setRead(true);
             c.setAdmin(admin);
             c.setReplyDate(new Date());
             commentsRepo.save(c);
@@ -55,6 +56,11 @@ public class CommentServiceImpl implements CommentsService{
     @Override
     public List<Comment> getComments(String source) {
         return commentsRepo.findAllBySourceOrderByDateAsc(source);
+    }
+
+    @Override
+    public List<Comment> getCommentsRead(boolean read) {
+        return commentsRepo.findAllByReadOrderByDateAsc(read);
     }
 
     @Override
@@ -79,6 +85,25 @@ public class CommentServiceImpl implements CommentsService{
                 mongoTemplate.getCollectionName(Comment.class), CommentCategoryCount.class);
 
         return results.getMappedResults();
+    }
+
+    @Override
+    public void setRead(String id) {
+        Optional<Comment> cOpt = commentsRepo.findById(id);
+        if(cOpt.isPresent()){
+            Comment c = cOpt.get();
+            c.setRead(!c.isRead());
+            commentsRepo.save(c);
+        }
+    }
+
+    @Override
+    public void setAllRead() {
+        List <Comment> comments = commentsRepo.findAll();
+        for (Comment c : comments) {
+            c.setRead(true);
+        }
+        commentsRepo.saveAll(comments);
     }
 
 }

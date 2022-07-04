@@ -18,6 +18,7 @@ public class Comment {
     private String sourceTitle;
     private String user;
     private String comment;
+    private boolean read;
     private String admin;
     private String reply;
     private Date replyDate;
@@ -68,6 +69,14 @@ public class Comment {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public String getAdmin() {
