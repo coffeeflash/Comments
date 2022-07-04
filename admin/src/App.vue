@@ -146,7 +146,7 @@ button {
 
 .unread {
   color: #FF4500;
-  margin-left: 1rem;
+  margin-left: 0.2rem;
 }
 
 .v-enter-active,

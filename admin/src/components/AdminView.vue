@@ -27,9 +27,10 @@
 
               <strong>{{ commentToEdit.user }}</strong>:
               <br v-if="commentToEdit.comment.includes('<br>')"> <em v-html="commentToEdit.comment"></em>
-              <button type="button" @click="deleteComment(commentToEdit.id, commentSource)">delete</button>
               <button type="button" @click="readComment(commentToEdit.id, commentSource)">
-                {{ commentToEdit.read ? 'read' : 'unread' }}</button>
+                {{ commentToEdit.read ? 'read' : 'unread' }}
+                <strong class="unread" v-if="!commentToEdit.read">!!!</strong></button>
+              <button type="button" @click="deleteComment(commentToEdit.id, commentSource)">delete</button>
               <button v-if="commentToReply !== commentToEdit.id" type="button" @click="commentToReply = commentToEdit.id">
                 <span v-if="commentToEdit.reply">edit</span>reply</button>
               <button v-else type="button" @click="commentToReply = ''">cancel reply form</button>
@@ -160,7 +161,7 @@ export default {
 
     function readAllComments(){
       axios.post(baseUrl + 'readAll')
-        .then(() => prepare())
+        .then(() => prepareUnreadHighlighting())
     }
 
     return {

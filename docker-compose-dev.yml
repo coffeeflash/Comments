@@ -28,23 +28,3 @@ services:
       ME_CONFIG_BASICAUTH_PASSWORD: PleaseChangeMe
       ME_CONFIG_MONGODB_URL: mongodb://root:PleaseChangeMe@mongo:27017/
 
-  comments:
-    image: registry.tobisyurt.net/comments
-    restart: always
-    ports:
-      - 8071:8080
-    depends_on:
-      - mongo
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    environment:
-      # SPRING_PROFILES_ACTIVE=prod --> not needed
-      IP_BLOCK_TIME: 900
-      QUIZ_COUNT: 5
-      QUIZ_VALIDITY_SECONDS: 120
-      QUIZ_COMPLEXITY: 2
-      SPRING_DATA_MONGODB_HOST: mongo
-      SPRING_DATA_MONGODB_DATABASE: comments
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-      SPRING_DATA_MONGODB_USERNAME: root
-      SPRING_DATA_MONGODB_PASSWORD: PleaseChangeMe
