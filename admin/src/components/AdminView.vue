@@ -161,7 +161,10 @@ export default {
 
     function readAllComments(){
       axios.post(baseUrl + 'readAll')
-        .then(() => prepareUnreadHighlighting())
+        .then(() => {
+          prepareUnreadHighlighting()
+          commentsToEdit.value.forEach(c => c.read = true)
+        })
     }
 
     return {
