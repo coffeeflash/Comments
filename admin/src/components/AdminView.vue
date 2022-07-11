@@ -106,6 +106,7 @@ export default {
 
     function refresh(){
       commentSources.value = []
+      commentsToShow.value = ''
       prepare()
     }
 
@@ -135,7 +136,7 @@ export default {
             loading.value = false
             prepare()
           }
-          else showComments(commentSource.source)
+          else showComments(commentSource)
         }
       )
     }
