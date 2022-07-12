@@ -25,14 +25,27 @@ function setUp(){
       $('.comments').empty().css("opacity", 0)
       comments.forEach(comment => {
         $('.comments').append(
-          '<div class="emphasize user"><h3 style="margin: 0;">' + comment.user +
+          '<div style="margin-top: 0.6rem;\n' +
+            '  margin-bottom: 0.6rem;' +
+            '  padding: 0.5rem;' +
+            '  background-color: lightgray;' +
+            '  color: black;' +
+            '  border-radius: 5px;' +
+            '   margin-right: 6%;"><h3 style="margin: 0;">' + comment.user +
             '<span style="color:gray;font-size:0.8rem;"> (' + new Date(comment.date).toLocaleString() + ')</span>'+
           '</h3>'+
           '<p style="margin:0;">' + comment.comment + '</p></div>'
         )
         if ( comment.reply ){
           $('.comments').append(
-            '<div class="emphasize admin"><h3 style="margin: 0;">' + comment.admin +
+            '<div style="  margin-top: 0.6rem;\n' +
+              '  margin-bottom: 0.6rem;\n' +
+              '  padding: 0.5rem;\n' +
+              '  background-color: lightgray;\n' +
+              '  color: black;\n' +
+              '  border-radius: 5px;' +
+              '  color: #FF4500;\n' +
+              '  margin-left: 6%;"><h3 style="margin: 0;">' + comment.admin +
               '<span style="color:rgb(128,128,128);font-size:0.8rem;"> (' + new Date(comment.replyDate).toLocaleString() + ')</span></h3>'+
             '<p  style="margin:0;">' + comment.reply + '</p></div>')
         }
