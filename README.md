@@ -67,26 +67,34 @@ devices...
 
 `PRING_SECURITY_USER_NAME` and `SPRING_SECURITY_USER_PASSWORD` are for the http basic authentication,
 whereas `ADMIN_NAME` is just the blogger's name, which can be shown with the reply text.
+
 ## Integration
+
+I provide some integration scripts to provide an easy integration. It is all written in plain javascript
+with inline styles to not have to integrate multiple files and/or to thinker with css. Additionally,
+the script size is only ~9 kB, which is very small. First I wanted to use jquery, which is at least
+88 kB.  
 
 ### Jekyll
 
-Add this to your post layout in `_layouts/post.html`
+Add these two things to your post layout in `_layouts/post.html`. The first id: `comment-title` is
+necessary to have a nice title in the admin interface later.
 
 ```html
-<div id="comment-section"></div>
+<h1 id="comment-title">{{ page.title }}</h1> <!-- (1) -->
+...
+<div id="comment-section"></div> <!-- (2) -->
 ```
 
-Then put the necessary jquery-*.*.*.min.js and comments.js in `assets/js`.
-Also add it the jquery somewhere in your html header (`_includes/head.html):
+Alteration (1) is not mandatory to get the app working. If you strictly don't care of a nice title
+and would be fine with just the url `https://blog.example/post1` instead of `title of post1` you can take
+the integration script `comments-no-title.js` and only add tag (2).
 
-```html
-<script type="text/javascript" src="{{ site.baseurl }}/assets/js/jquery-3.4.1.min.js" ></script>
-```
+Put the necessary `comments.js` or `comments-no-title.js` in `assets/js`.
 
-The comments js can then be added in whichever post you want to have the comments activated. It depends a little on your
-Jekyll theme, how you would to that... In the end it should load at the very end of your post, so that the DOM is
-rendered already. Or you wrap the whole comments.js in `$(document).ready(function)`
+The comments js can then be added in whichever post you want to have the comments activated. It
+depends a little on your Jekyll theme, how you would to that... In the end it should load at the very
+end of your post, so that the DOM is rendered already. Or you wrap the whole comments.js in `$(document).ready(function)`
 
 ## Development
 
