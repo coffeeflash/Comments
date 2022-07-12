@@ -90,7 +90,6 @@ public class APIController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
-
         memCacheService.add(clientIpAddress, "waiting", ipBlockTime);
         commentReq.setComment(SecUtil.newLines(commentReq.getComment()));
         commentsService.addComment(commentReq);
