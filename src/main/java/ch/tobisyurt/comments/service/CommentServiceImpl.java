@@ -60,7 +60,7 @@ public class CommentServiceImpl implements CommentsService{
 
     @Override
     public List<Comment> getCommentsRead(boolean read) {
-        return commentsRepo.findAllByReadOrderByDateAsc(read);
+        return commentsRepo.findAllByReadOrderByReadAscDateAsc(read);
     }
 
     @Override

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface CommentsRepo extends MongoRepository<Comment, String> {
     List<Comment> findAllBySourceOrderByDateAsc(String source);
-    List<Comment> findAllByReadOrderByDateAsc(boolean read);
+    List<Comment> findAllByReadOrderByReadAscDateAsc(boolean read);
     List<Comment> findAll();
 }
