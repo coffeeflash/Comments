@@ -9,7 +9,7 @@
   </p>
   <p><button @click="refresh">Refresh</button><button @click="readAllComments">Set all to "read"</button></p>
   <loading-animation :loading="initializing"></loading-animation>
-  <h2>Comment Categories</h2>
+  <h2>Comment Categories / Pages</h2>
   <transition>
   <ul v-if="commentSources.length!=0">
     <li v-for="commentSource in commentSources">
