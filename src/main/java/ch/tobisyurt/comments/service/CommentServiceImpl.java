@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.stereotype.Service;
+import org.owasp.encoder.Encode;
 
 import java.util.Date;
 import java.util.List;
@@ -29,8 +30,14 @@ public class CommentServiceImpl implements CommentsService{
     @Override
     public void addComment(Comment comment) {
         comment.setDate(new Date());
-//        comment.setSource(referer);
+        LOG.info("Non-sanitized: " + comment.getComment());
+        String sanitizedComment = Encode.forHtml(comment.getComment());
+        LOG.info("Sanitized html: " + sanitizedComment);
+        sanitizedComment = Encode.forJavaScript(comment.getComment());
+        LOG.info("Sanitized javascript: " + sanitizedComment);
+        comment.setComment(sanitizedComment);
         comment = commentsRepo.insert(comment);
+
         LOG.info("Persisted comment from user: {} on source: {} with comment_id: {}",
                 comment.getUser(), comment.getSource(), comment.getId());
     }

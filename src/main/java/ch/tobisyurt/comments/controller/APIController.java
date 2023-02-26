@@ -82,7 +82,8 @@ public class APIController {
             return "You can only post a comment every " + ipBlockTime / 60 + " minutes.";
         }
 
-        if(!SecUtil.validate(commentReq.getComment())
+//        if(!SecUtil.validate(commentReq.getComment())
+        if(false
                 || !SecUtil.validate(commentReq.getUser())
                 || !quizService.verifyQuizSolution(commentReq.getQuizId(), commentReq.getQuizSolutions())){
 
@@ -91,7 +92,7 @@ public class APIController {
         }
 
         memCacheService.add(clientIpAddress, "waiting", ipBlockTime);
-        commentReq.setComment(SecUtil.newLines(commentReq.getComment()));
+//        commentReq.setComment(SecUtil.newLines(commentReq.getComment()));
         commentsService.addComment(commentReq);
 
         return "ok";
