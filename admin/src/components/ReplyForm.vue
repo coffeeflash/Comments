@@ -9,13 +9,13 @@
 <script>
 import { ref, computed } from 'vue'
 export default {
-  name: "ReplyForm",
-  props: { alreadyReplied: { default: ''} },
-  setup(props, context){
+  name: 'ReplyForm',
+  props: { alreadyReplied: { default: '' } },
+  setup (props, context) {
     const replyText = ref(props.alreadyReplied)
     const inputValidation = computed(() => !replyText.value)
 
-    function addReply(){
+    function addReply () {
       context.emit('addReply', replyText.value)
     }
 

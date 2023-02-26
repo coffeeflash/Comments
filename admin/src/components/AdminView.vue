@@ -54,10 +54,10 @@
 
 <script>
 import axios from 'axios'
-import  { ref, onMounted } from 'vue'
-import LoadingAnimation from "@/components/LoadingAnimation"
-import ReplyForm from "@/components/ReplyForm"
-import CommentsLogo from "@/components/CommentsLogo";
+import { ref, onMounted } from 'vue'
+import LoadingAnimation from '@/components/LoadingAnimation'
+import ReplyForm from '@/components/ReplyForm'
+import CommentsLogo from '@/components/CommentsLogo'
 export default {
   name: 'AdminView',
   components: {
@@ -65,8 +65,7 @@ export default {
     ReplyForm,
     CommentsLogo
   },
-  setup(){
-
+  setup () {
     const baseUrl = process.env.BASE_URL + 'secapi/'
     const commentSources = ref([])
     const commentsToShow = ref('')
@@ -79,19 +78,19 @@ export default {
 
     onMounted(() => prepare())
 
-    function prepare(){
+    function prepare () {
       initializing.value = true
       axios.get(baseUrl + 'commentCategories')
-        .then( r => {
+        .then(r => {
           commentSources.value = r.data
           prepareUnreadHighlighting()
         })
-        .then(() =>{
+        .then(() => {
           initializing.value = false
         })
     }
 
-    function prepareUnreadHighlighting(){
+    function prepareUnreadHighlighting () {
       return axios.get(baseUrl + 'commentsUnread')
         .then(r => {
           commentsUnread = r.data
@@ -104,17 +103,17 @@ export default {
         })
     }
 
-    function refresh(){
+    function refresh () {
       commentSources.value = []
       commentsToShow.value = ''
       prepare()
     }
 
-    function isCollapsed(source){
+    function isCollapsed (source) {
       return commentsToShow.value === source
     }
 
-    function showComments(source){
+    function showComments (source) {
       loading.value = true
       axios.get(baseUrl + 'comments?source=' + source.source).then(
         r => {
@@ -125,42 +124,41 @@ export default {
       )
     }
 
-    function deleteComment(id, commentSource){
+    function deleteComment (id, commentSource) {
       loading.value = true
       axios.post(baseUrl + 'delete?id=' + id).then(
         () => {
           commentSources.value.forEach(s => {
             if (s.source === commentSource.source) s.count--
           })
-          if(commentSource.count == 0) {
+          if (commentSource.count === 0) {
             loading.value = false
             prepare()
-          }
-          else showComments(commentSource)
+          } else showComments(commentSource)
         }
       )
     }
 
-    function addReply(source, replyText){
+    function addReply (source, replyText) {
       loading.value = true
-      const requestBody = {text: replyText, id: commentToReply.value}
+      const requestBody = { text: replyText, id: commentToReply.value }
       axios.post(baseUrl + 'reply', requestBody)
         .then(() => {
-            commentToReply.value = ''
-            prepareUnreadHighlighting()
-            showComments(source)
+          commentToReply.value = ''
+          prepareUnreadHighlighting()
+          showComments(source)
         }
-      )
+        )
     }
 
-    function readComment(id, commentSource){
+    function readComment (id, commentSource) {
       loading.value = true
       axios.post(baseUrl + 'read?id=' + id)
-      .then(() => prepareUnreadHighlighting())
-      .then(() => showComments(commentSource))
+        .then(() => prepareUnreadHighlighting())
+        .then(() => showComments(commentSource))
     }
 
-    function readAllComments(){
+    function readAllComments () {
       axios.post(baseUrl + 'readAll')
         .then(() => {
           prepareUnreadHighlighting()
@@ -186,4 +184,3 @@ export default {
   }
 }
 </script>
-

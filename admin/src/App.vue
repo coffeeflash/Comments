@@ -26,12 +26,10 @@ export default {
 
 body[a="dark"] { @include dark-appearance; }
 
-
 @media (prefers-color-scheme: dark) {
   body { @include dark-appearance; }
 }
 // -------------------------------------------- //
-
 
 // bg color is also needed in html in order to
 // block body's background propagation

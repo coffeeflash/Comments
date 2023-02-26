@@ -6,7 +6,7 @@
 import { ref, watch } from 'vue'
 
 export default {
-  name: "LoadingAnimation",
+  name: 'LoadingAnimation',
   props: {
     size: {
       default: 12
@@ -16,22 +16,22 @@ export default {
       default: false
     }
   },
-  setup(props) {
+  setup (props) {
     const spinner = ref('|')
     const spinnerStates = ['/', '-', '\\', '|']
     let i = 0
 
     watch(props, () => recursiveWait())
 
-    async function recursiveWait() {
-      spinner.value = spinnerStates[i++%4]
+    async function recursiveWait () {
+      spinner.value = spinnerStates[i++ % 4]
       await delay(200)
-      if(props.loading) await recursiveWait()
+      if (props.loading) await recursiveWait()
       else i = 0
     }
 
-    function delay(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+    function delay (ms) {
+      return new Promise(resolve => setTimeout(resolve, ms))
     }
 
     return {

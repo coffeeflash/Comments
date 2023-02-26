@@ -8,13 +8,13 @@
 
 <script>
 export default {
-  name: "CommentsLogo",
+  name: 'CommentsLogo',
   props: {
     size: {
       default: 100
     }
   },
-  setup(props){
+  setup (props) {
     return {
       props
     }
