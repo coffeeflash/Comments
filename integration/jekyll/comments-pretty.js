@@ -1,6 +1,8 @@
 // to differ dev / prod env
 const baseUrl = (location.origin.includes("4000") ? 'http://localhost:8080' : location.origin) + '/comments'
 
+const commentSource = document.URL.replace(/#[^#]*$/, "").replace(/\?[^\?]*$/, "")
+
 let loading = false
 let solvedQuizes = 0
 let numToSolve = 0
@@ -9,7 +11,7 @@ setUp()
 
 async function setUp(){
 
-    const response = await fetch(baseUrl + '/api/comments?source=' + document.URL)
+    const response = await fetch(baseUrl + '/api/comments?source=' + commentSource)
     const comments = await response.json()
 
 
@@ -258,7 +260,7 @@ async function sendComment(){
         },
         body: JSON.stringify({
             sourceTitle: document.getElementById('comment-title').innerText,
-            source: document.URL,
+            source: commentSource,
             user: document.getElementById('name').value,
             comment: document.getElementById('text-comment').value,
             quizId: quiz.contents[0],

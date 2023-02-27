@@ -25,3 +25,5 @@ ENV JAVA_OPTS=""
 
 # Fire up our Spring Boot app by default
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+# momentarily only for location /comments, if other change this manually or remove the healthcheck TODO
+HEALTHCHECK CMD curl --fail http://localhost:8080/comments || exit 1
