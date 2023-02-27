@@ -11,6 +11,9 @@ If you want to read more about the project in general, see [here](https://tobisy
 
 My jenkins builds docker images on the master branch. They are available [here](https://hub.docker.com/r/toubivankenoubi/comments).
 
+On my blog you can test the app. There is also a page to try out the comments app:
+[https://tobisyurt.net/test_comments_app](https://tobisyurt.net/test_comments_app).
+
 ## Preview
 
 Quick Video, how it could look.
