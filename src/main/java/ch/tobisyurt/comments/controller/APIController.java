@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -54,6 +55,18 @@ public class APIController {
         return quizService.createQuiz( quizComplexity, quizCount, quizValidityInSeconds);
 
     }
+
+    @GetMapping(value = "/load")
+    public List<Comment> getLoad(@RequestParam Integer count) {
+        LOG.info("{} got called for post: {}", "/load",count);
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            list.add(i);
+        }
+
+        return commentsService.getComments("asd");
+    }
+
 
     @GetMapping(value = API_MAPPING_GET_COMMENTS)
     public List<Comment> getComments(@RequestParam String source) {

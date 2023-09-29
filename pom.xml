@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>ch.tobisyurt</groupId>
 	<artifactId>comments</artifactId>
-	<version>0.0.1-BETA</version>
+	<version>1.0.0</version>
 	<name>comments</name>
 	<description>Comments service for an easy integration into static blogs</description>
 	<properties>
