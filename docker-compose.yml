@@ -1,32 +1,5 @@
 version: '3.1'
 
-volumes:
-  mongo_data:
-
-services:
-  mongo:
-    image: mongo
-    container_name: comments-mongo
-    restart: always
-    volumes:
-      - mongo_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: PleaseChangeMe
-
-  mongo-express:
-    image: mongo-express
-    container_name: comments-mongo-express
-    restart: always
-    ports:
-      - 8082:8081
-    depends_on:
-      - mongo
-    environment:
-      ME_CONFIG_BASICAUTH_USERNAME: tobi
-      ME_CONFIG_BASICAUTH_PASSWORD: PleaseChangeMe
-      ME_CONFIG_MONGODB_URL: mongodb://root:PleaseChangeMe@mongo:27017/
-
   comments:
     image: registry.tobisyurt.net/comments
     container_name: comments-webapp
@@ -44,10 +17,5 @@ services:
       QUIZ_VALIDITY_SECONDS: 120
       QUIZ_COMPLEXITY: 2
       ADMIN_NAME: the_bloggers_name
-      SPRING_DATA_MONGODB_HOST: mongo
-      SPRING_DATA_MONGODB_DATABASE: comments
-      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
-      SPRING_DATA_MONGODB_USERNAME: root
-      SPRING_DATA_MONGODB_PASSWORD: PleaseChangeMe
       SPRING_SECURITY_USER_NAME: user
       SPRING_SECURITY_USER_PASSWORD: PleaseChangeMe
