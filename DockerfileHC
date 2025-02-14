@@ -14,7 +14,7 @@
 
 
 # Just using the build artifact and then removing the build-container
-FROM openjdk:17-jdk
+FROM openjdk:21-jdk
 
 MAINTAINER Tobias Schneeberger
 
