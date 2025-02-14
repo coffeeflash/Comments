@@ -1,6 +1,5 @@
 package ch.tobisyurt.comments;
 
-import ch.tobisyurt.comments.controller.APIController;
 import ch.tobisyurt.comments.model.Comment;
 import ch.tobisyurt.comments.repository.CommentsRepo;
 import ch.tobisyurt.comments.service.CommentsService;
@@ -12,8 +11,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootApplication
 public class CommentsApplication {

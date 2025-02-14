@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -27,11 +28,12 @@ public class SpringSecurity {
 
         // Most things configured here do not apply to the main site: tobisyurt.net, because it is served
         // by another webserver...
-        http.authorizeHttpRequests(authz -> authz
+        http.csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authz -> authz
             .requestMatchers(resources).permitAll()
             .anyRequest().authenticated())
             .httpBasic(Customizer.withDefaults());
-
 
         return http.build();
     }

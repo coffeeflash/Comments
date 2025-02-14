@@ -1,7 +1,6 @@
 package ch.tobisyurt.comments.repository;
 
 import ch.tobisyurt.comments.model.Comment;
-import ch.tobisyurt.comments.model.CommentCategoryCount;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
