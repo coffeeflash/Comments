@@ -41,7 +41,7 @@ public class CommentServiceImpl implements CommentsService {
                 comment.getUser(), comment.getSource(), comment.getId());
 
         if (mailNotificationEnabled && mailService != null) {
-            String subject = "User " + comment.getUser() + "left a comment.";
+            String subject = "User " + comment.getUser() + " left a comment.";
             String text = "User " + comment.getUser() + " commented on " + comment.getSource() + ":\n" +
                     comment.getComment();
             mailService.sendMailNotificationToAdmin(subject, text);
