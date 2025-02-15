@@ -73,6 +73,19 @@ devices...
 `PRING_SECURITY_USER_NAME` and `SPRING_SECURITY_USER_PASSWORD` are for the http basic authentication,
 whereas `ADMIN_NAME` is just the blogger's name, which can be shown with the reply text.
 
+In the following example you can see how the mail notifications can be enabled for an admin.
+
+```yaml
+  MAIL_NOTIFICATION_ENABLE=true
+  MAIL_NOTIFICATION_ADMIN=???
+  SPRING_MAIL_HOST=???
+  SPRING_MAIL_PORT=???
+  SPRING_MAIL_USERNAME=???
+  SPRING_MAIL_PASSWORD=???
+  SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH=true
+  SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE=true
+```
+
 ## Integration
 
 I provide some integration scripts to provide an easy integration. It is all written in plain javascript
