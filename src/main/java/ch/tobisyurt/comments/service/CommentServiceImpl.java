@@ -6,6 +6,7 @@ import ch.tobisyurt.comments.repository.CommentsRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -24,15 +25,25 @@ public class CommentServiceImpl implements CommentsService{
     @Autowired
     MongoTemplate mongoTemplate;
 
+    @Autowired
+    MailService mailService;
+
+    @Value("${mail.notification.enable}")
+    private boolean mailNotificationEnabled;
+
     private static final Logger LOG = LoggerFactory.getLogger(CommentServiceImpl.class);
 
     @Override
     public void addComment(Comment comment) {
         comment.setDate(new Date());
-//        comment.setSource(referer);
         comment = commentsRepo.insert(comment);
         LOG.info("Persisted comment from user: {} on source: {} with comment_id: {}",
                 comment.getUser(), comment.getSource(), comment.getId());
+
+        if(mailNotificationEnabled){
+            String subject = "User " + comment.getUser() + "left a comment.";
+            mailService.sendMailNotificationToAdmin(subject, comment.toString());
+        }
     }
 
     @Override
