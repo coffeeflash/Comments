@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailService {
 
-    @Autowired
+    @Autowired(required = false)
     private JavaMailSender emailSender;
 
     @Value("${mail.notification.admin}")

@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CommentServiceImpl implements CommentsService{
+public class CommentServiceImpl implements CommentsService {
 
     @Autowired
     CommentsRepo commentsRepo;
@@ -25,7 +25,7 @@ public class CommentServiceImpl implements CommentsService{
     @Autowired
     MongoTemplate mongoTemplate;
 
-    @Autowired
+    @Autowired(required = false)
     MailService mailService;
 
     @Value("${mail.notification.enable}")
@@ -40,9 +40,11 @@ public class CommentServiceImpl implements CommentsService{
         LOG.info("Persisted comment from user: {} on source: {} with comment_id: {}",
                 comment.getUser(), comment.getSource(), comment.getId());
 
-        if(mailNotificationEnabled){
+        if (mailNotificationEnabled && mailService != null) {
             String subject = "User " + comment.getUser() + "left a comment.";
-            mailService.sendMailNotificationToAdmin(subject, comment.toString());
+            String text = "User " + comment.getUser() + " commented on " + comment.getSource() + ":\n" +
+                    comment.getComment();
+            mailService.sendMailNotificationToAdmin(subject, text);
         }
     }
 
@@ -54,7 +56,7 @@ public class CommentServiceImpl implements CommentsService{
     @Override
     public void replyToComment(String id, String admin, String replyText) {
         Optional<Comment> toReplyOpt = commentsRepo.findById(id);
-        if(toReplyOpt.isPresent()){
+        if (toReplyOpt.isPresent()) {
             Comment c = toReplyOpt.get();
             c.setReply(replyText);
             c.setRead(true);
@@ -83,14 +85,11 @@ public class CommentServiceImpl implements CommentsService{
 
         GroupOperation groupOperation = Aggregation.group(SOURCE, SOURCE_TITLE).count().as(COUNT);
         // projection operation
-        ProjectionOperation projectionOperation =
-                Aggregation.project(COUNT, SOURCE, SOURCE_TITLE);
+        ProjectionOperation projectionOperation = Aggregation.project(COUNT, SOURCE, SOURCE_TITLE);
         // sorting in ascending
-        SortOperation sortOperation =
-                Aggregation.sort(Sort.by(Sort.Direction.DESC, COUNT));
+        SortOperation sortOperation = Aggregation.sort(Sort.by(Sort.Direction.DESC, COUNT));
         // aggregating all 3 operations using newAggregation() function
-        Aggregation aggregation =
-                Aggregation.newAggregation(groupOperation, projectionOperation, sortOperation);
+        Aggregation aggregation = Aggregation.newAggregation(groupOperation, projectionOperation, sortOperation);
         // putting in a list
         AggregationResults<CommentCategoryCount> results = mongoTemplate.aggregate(aggregation,
                 mongoTemplate.getCollectionName(Comment.class), CommentCategoryCount.class);
@@ -101,7 +100,7 @@ public class CommentServiceImpl implements CommentsService{
     @Override
     public void setRead(String id) {
         Optional<Comment> cOpt = commentsRepo.findById(id);
-        if(cOpt.isPresent()){
+        if (cOpt.isPresent()) {
             Comment c = cOpt.get();
             c.setRead(!c.isRead());
             commentsRepo.save(c);
@@ -110,7 +109,7 @@ public class CommentServiceImpl implements CommentsService{
 
     @Override
     public void setAllRead() {
-        List <Comment> comments = commentsRepo.findAll();
+        List<Comment> comments = commentsRepo.findAll();
         for (Comment c : comments) {
             c.setRead(true);
         }
