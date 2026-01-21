@@ -19,8 +19,7 @@ async function setUp(){
     commentsSecEl.style.opacity = 1
     commentsSecEl.innerHTML =
         '<h2>Comment - Section</h2>'+
-        '<p>No subscription to any service needed! Instead your device has to solve '+
-        'some hash quizes to successfully submit a comment.</p>'+
+        '<p>No subscription to any service is required! Instead, your device simply needs to solve a few hash-based challenges to successfully submit a comment.</p>'+
         '<div id="comments"></div>'+
         '<div id="addComment">'+
         '  <button id="x" type="button" onclick="addComment()"> Add a comment </button>'+
