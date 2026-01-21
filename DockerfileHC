@@ -14,9 +14,7 @@
 
 
 # Just using the build artifact and then removing the build-container
-FROM openjdk:21-jdk
-
-MAINTAINER Tobias Schneeberger
+FROM eclipse-temurin:21-jre-ubi9-minimal
 
 # Add Spring Boot app.jar to Container
 COPY /target/comments*.jar app.jar
